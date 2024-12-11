@@ -1,11 +1,14 @@
 import React from 'react'
 import Link from "next/link";
+import UnloggedNavbar from './UnloggedNavbar';
+import UnloggedFooter from './UnloggedFooter';
 
 type Props = {}
 
 const UnloggedContent = (props: Props) => {
   return (
-    <div><main className="flex-grow p-8 bg-gray-50 dark:bg-neutral-800">
+    <div>
+      <UnloggedNavbar/><main className="flex-grow p-8 bg-gray-50 dark:bg-neutral-800">
     <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-8 ">
       Witaj w portalu informacyjnym SM Wyrzysk!
     </h1>
@@ -62,7 +65,7 @@ const UnloggedContent = (props: Props) => {
 
     </div>
   </main>
-
+  <UnloggedFooter/>
   </div>
   )
 }
