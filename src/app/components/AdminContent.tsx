@@ -1,69 +1,77 @@
-import React from 'react'
+import React from 'react';
 import Link from "next/link";
-
-type Props = {}
+import AdminFooter from './AdminFooter';
+import AdminNavbar from './AdminNavbar';
+import { FaUser } from "react-icons/fa";
+import { IoIosNotifications } from "react-icons/io";
+import { MdError } from "react-icons/md";
+import { IoWater } from "react-icons/io5";
+import { FaFileInvoiceDollar } from "react-icons/fa6";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
+type Props = {};
 
 const AdminContent = (props: Props) => {
   return (
-    <div><main className="flex-grow p-8 bg-gray-50 dark:bg-neutral-800">
-    <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-8 ">
-      PANEL ADMINA
-    </h1>
-    <h1 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-8 ">
-      PANEL ADMINA
-    </h1>
+    <>
+      <AdminNavbar />
+      <div id="main-container" className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
+        <main className="flex-grow p-8 flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-2 mt-14">
+            {/* Kafelek 1 */}
+            <Link href="/payments" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
+                <FaMoneyBillTrendUp className='w-56 h-56 pt-5'/>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white ">Zarządzaj zadłużeniami</h3>
+                
+              </div>
+              </Link>
+              {/* Kafelek 2 */}
+              <Link href="/contact" className="text-blue-600 font-bold dark:text-emerald-500  block">
+                <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
+                <FaUser className='w-56 h-56 pt-5'/>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-      <div className="bg-white p-6 rounded-lg shadow-xl dark:bg-neutral-900">
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-white">Kontakt</h3>
-        <p className="text-gray-600 dark:text-neutral-300">
-          Skontaktuj się z nami, aby uzyskać więcej informacji.<br />
-          Numer telefonu: 111 222 333<br />
-          E-mail: smwyrzysk@gmail.com
-        </p>
-        <div className="my-8">
-          <h3 className="text-2xl font-semibold mb-4 text-gray-600 dark:text-white">Nasza Lokalizacja</h3>
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d474.7370430587557!2d17.273827326769!3d53.154625237250755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4703961300d97233%3A0xd434b6bd0576fd85!2sSp%C3%B3%C5%82dzielnia%20Mieszkaniowa%20Lokatorsko%20-%20W%C5%82asno%C5%9Bciowa%20w%20Wyrzysku!5e0!3m2!1spl!2spl!4v1733855644301!5m2!1spl!2spl"
-            width="850"
-            height="300"
-            loading="lazy"
-          ></iframe>
-        </div>
-        <Link href="/contact" className="text-blue-600 font-bold dark:text-emerald-500 mt-4 block">Przejdź do kontaktu</Link>
+                  <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Zarządzaj mieszkańcami</h3>
+                </div>
+              </Link>
+              {/* Kafelek 3 */}
+              <Link href="/report" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
+              <MdError className='w-60 h-60  pt-5'/>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Zgłoszone problemy</h3>
+                
+
+              </div>
+              </Link>
+              {/* Kafelek 4 */}
+              <Link href="/readings" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
+              <IoWater className='w-60 h-60'/>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Odczyty liczników</h3>
+                
+              </div>
+              </Link>
+              {/* Kafelek 5 */}
+              <Link href="/history" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
+                <FaFileInvoiceDollar className='w-56 h-56 pt-6'/>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Faktury</h3>
+                
+              </div>
+              </Link>
+              {/* Kafelek 6 */}
+              <Link href="/notifications" className="text-blue-600 font-bold dark:text-emerald-500  block">
+              <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
+              <IoIosNotifications  className='w-60 h-60' />
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Wyślij powiadomienie</h3>
+                 
+              </div>
+              </Link>
+          </div>
+        </main>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-xl dark:bg-neutral-900">
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-white">Pierwszy raz na stronie</h3>
-        <p className="text-gray-600 dark:text-neutral-300 mb-4">
-          Aby skorzystać z naszego portalu, zaloguj się na konto. Dane logowania otrzymasz na adres e-mail lub pocztą. Po pierwszym logowaniu możesz zmienić hasło i dostosować dane.
-        </p>
-        <div className="mb-6">
-          <h4 className="text-xl font-semibold text-gray-800 mb-2 dark:text-white">Jak zacząć?</h4>
-          <ol className="list-decimal pl-8 text-lg space-y-2 text-gray-600 dark:text-neutral-300">
-            <li>Sprawdź swoje dane logowania w e-mailu lub w przesłanym liście.</li>
-            <li>Zaloguj się na stronie używając loginu i hasła.</li>
-            <li>Po zalogowaniu możesz zmienić swoje hasło i dostosować dane.</li>
-          </ol>
-        </div>
-        <h3 className="text-2xl font-semibold text-gray-800 mb-4 dark:text-white">Funkcje naszej aplikacji:</h3>
-        <ul className="list-disc text-xl pl-8 space-y-2 text-gray-800 mb-2 dark:text-white">
-          <li><span className="text-blue-500">🔒</span> Stan zadłużenia (zaległe płatności)</li>
-          <li><span className="text-green-500">💳</span> Opłacanie śmieci itp.</li>
-          <li><span className="text-red-500">📢</span> Zgłaszanie problemów</li>
-          <li><span className="text-blue-600">💧</span> Wprowadzanie odczytów licznika wody</li>
-        </ul>
-        <div className="mt-8 mr-5 flex justify-end">
-          <Link href="/login_panel" className="bg-blue-600 text-white py-2 px-6 rounded-lg text-lg font-bold hover:bg-blue-700 dark:bg-emerald-500 dark:hover:bg-emerald-600">
-            Zaloguj się
-          </Link>
-        </div>
+      <AdminFooter/>
+    </>
+  );
+};
 
-      </div>
-
-
-    </div>
-  </main>
-
-  </div>
-  )
-}
 export default AdminContent;

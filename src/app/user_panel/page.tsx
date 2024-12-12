@@ -1,17 +1,18 @@
 "use client"
 import React, { useState } from "react";
-import AdminContent from "../components/AdminContent";
+
+import UserContent from "../components/UserContent";
 
 
-const AdminPage: React.FC = () => {
+const UserPage: React.FC = () => {
 
   return (
     <div className="flex flex-col bg-gray-900">
       <main className="flex-grow">
-        <AdminContent/>
+        <UserContent/>
       </main>
     </div>
   );
 };
 
-export default AdminPage;
+export default UserPage;

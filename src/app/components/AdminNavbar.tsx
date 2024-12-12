@@ -5,8 +5,8 @@ import ThemeToggle from "../components/ThemeToggle";
 
 const AdminNavbar: React.FC = () => {
   return (
-    <nav className="bg-blue-700 p-4 dark:bg-neutral-900">
-      <div className=" flex items-center">
+    <nav className="bg-blue-700 p-4 dark:bg-neutral-900 fixed top-0 w-full z-50">
+      <div className="flex items-center">
         <div className="absolute left-4">
           <ThemeToggle />
         </div>
@@ -15,12 +15,12 @@ const AdminNavbar: React.FC = () => {
           Portal infomacyjny SM Wyrzysk
         </Link>
 
-        <div className="ml-auto"> {/* Dodajemy ml-auto aby wypchnąć link do prawej */}
+        <div className="ml-auto">
           <Link
             href="/login_panel"
             className="text-white bg-blue-600 font-bold hover:bg-blue-800 rounded-3xl p-3 dark:bg-emerald-600 dark:hover:bg-emerald-800"
           >
-            Zaloguj się
+            Wyloguj się
           </Link>
         </div>
       </div>
