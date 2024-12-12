@@ -19,7 +19,7 @@ const UserNavbar: React.FC = () => {
             href="/login_panel"
             className="text-white bg-blue-600 font-bold hover:bg-blue-800 rounded-3xl p-3 dark:bg-emerald-600 dark:hover:bg-emerald-800"
           >
-            Zaloguj się
+            Wyloguj się
           </Link>
         </div>
       </div>
