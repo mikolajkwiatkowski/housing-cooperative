@@ -13,7 +13,6 @@ type Props = {};
 const AdminContent = (props: Props) => {
   return (
     <>
-      <AdminNavbar />
       <div id="main-container" className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
         <main className="flex-grow p-8 flex justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-2 mt-14">
@@ -26,7 +25,7 @@ const AdminContent = (props: Props) => {
               </div>
               </Link>
               {/* Kafelek 2 */}
-              <Link href="/contact" className="text-blue-600 font-bold dark:text-emerald-500  block">
+              <Link href="admin_panel/manage_inhabitants" className="text-blue-600 font-bold dark:text-emerald-500  block">
                 <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
                 <FaUser className='w-56 h-56 pt-5'/>
 
@@ -34,7 +33,7 @@ const AdminContent = (props: Props) => {
                 </div>
               </Link>
               {/* Kafelek 3 */}
-              <Link href="/report" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <Link href="admin_panel/check_alerts  " className="text-blue-600 font-bold dark:text-emerald-500 block">
               <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
               <MdError className='w-60 h-60  pt-5'/>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Zgłoszone problemy</h3>
@@ -59,7 +58,7 @@ const AdminContent = (props: Props) => {
               </div>
               </Link>
               {/* Kafelek 6 */}
-              <Link href="/notifications" className="text-blue-600 font-bold dark:text-emerald-500  block">
+              <Link href="admin_panel/add_notification" className="text-blue-600 font-bold dark:text-emerald-500  block">
               <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
               <IoIosNotifications  className='w-60 h-60' />
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Wyślij powiadomienie</h3>
@@ -69,7 +68,6 @@ const AdminContent = (props: Props) => {
           </div>
         </main>
       </div>
-      <AdminFooter/>
     </>
   );
 };

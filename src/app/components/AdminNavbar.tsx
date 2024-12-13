@@ -17,7 +17,7 @@ const AdminNavbar: React.FC = () => {
 
         <div className="ml-auto">
           <Link
-            href="/login_panel"
+            href="/"
             className="text-white bg-blue-600 font-bold hover:bg-blue-800 rounded-3xl p-3 dark:bg-emerald-600 dark:hover:bg-emerald-800"
           >
             Wyloguj się
