@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import ThemeToggle from "../components/ThemeToggle";
 
+
 const Page: React.FC = () => {
   const [username, setUsername] = useState(""); // State for username
   const [password, setPassword] = useState(""); // State for password
@@ -24,17 +25,34 @@ const Page: React.FC = () => {
         body: JSON.stringify({ email: username, password }),
       });
 
+
       if (response.ok) {
         const data = await response.json();
-        setToken(data.token); // Save the session token
+        localStorage.setItem("token", data.token); // Save the session token in localStorage
         setSuccessMessage("Login successful!"); // Set success message
         setError(null); // Clear any previous errors
 
-        // Redirect based on user role
-        if (data.role === "USER") {
-          router.push("/user_panel");
-        } else if (data.role === "ADMIN") {
-          router.push("/admin_panel");
+        console.log(data.token);
+        // Fetch the user role using the new endpoint
+        const roleResponse = await fetch("http://localhost:8080/api/user/role", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer` + data.token,
+          },
+        });
+
+        if (roleResponse.ok) {
+          const roleData = await roleResponse.json();
+
+          // Redirect based on user role
+          if (roleData.role === "USER") {
+            router.push("/user_panel");
+          } else if (roleData.role === "ADMIN") {
+            router.push("/admin_panel");
+          }
+        } else {
+          setError("Failed to fetch user role");
+          setSuccessMessage(null); // Clear any previous success message
         }
       } else {
         const errorData = await response.json();

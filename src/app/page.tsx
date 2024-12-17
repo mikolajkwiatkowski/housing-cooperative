@@ -1,10 +1,5 @@
 "use client"
-import React, { useState } from "react";
 import UnloggedContent from "./components/UnloggedContent";
-import AdminContent from "./components/AdminContent";
-import UserContent from "./components/UserContent";
-import UnloggedNavbar from "./components/UnloggedNavbar";
-import UnloggedFooter from "./components/UnloggedFooter";
 
 const HomePage: React.FC = () => {
 
