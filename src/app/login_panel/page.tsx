@@ -35,9 +35,9 @@ const Page: React.FC = () => {
         console.log(data.token);
         // Fetch the user role using the new endpoint
         const roleResponse = await fetch("http://localhost:8080/api/user/role", {
-          method: "POST",
+          method: "GET",
           headers: {
-            "Authorization": `Bearer` + data.token,
+            "Authorization": `Bearer ` + data.token,
           },
         });
 
@@ -47,7 +47,7 @@ const Page: React.FC = () => {
           // Redirect based on user role
           if (roleData.role === "USER") {
             router.push("/user_panel");
-          } else if (roleData.role === "ADMIN") {
+          } else {
             router.push("/admin_panel");
           }
         } else {
