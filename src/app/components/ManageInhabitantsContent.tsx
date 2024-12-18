@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
 
-// Typ dla mieszkańca
 type Resident = {
     tenantId: number;
     pesel: string;
@@ -10,7 +9,11 @@ type Resident = {
     name: string;
     surname: string;
     mail: string;
-    isBacklog: boolean;
+    flatNumber: number;
+    staircaseNumber: number;
+    blockNumber: number;
+    street: string;
+    city: string;
 };
 
 const ManageInhabitantsContent = () => {
@@ -19,9 +22,7 @@ const ManageInhabitantsContent = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [editingResident, setEditingResident] = useState<Resident | null>(null); // Stan edycji mieszkańca
 
-    // Pobieranie danych z API
     const fetchResidents = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -54,53 +55,14 @@ const ManageInhabitantsContent = () => {
         );
     };
 
-    const handleResidentClick = (resident: Resident) => {
-        setEditingResident(resident); // Otwórz okno edycji
-    };
-
-    const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (editingResident) {
-            setEditingResident({ ...editingResident, [e.target.name]: e.target.value });
-        }
-    };
-
-    const handleSaveEdit = async () => {
-        if (!editingResident) return;
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch(`http://localhost:8080/api/admin/tenants/${editingResident.tenantId}`, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(editingResident),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-
-            // Zaktualizuj mieszkańca w stanie lokalnym
-            setResidents((prev) =>
-                prev.map((resident) =>
-                    resident.tenantId === editingResident.tenantId ? editingResident : resident
-                )
-            );
-            setEditingResident(null); // Zamknij okno edycji
-        } catch (err: any) {
-            setError(err.message || "Wystąpił błąd podczas zapisywania danych.");
-        }
-    };
+    const filteredResidents = residents.filter((resident) =>
+        resident.pesel.includes(searchTerm)
+    );
 
     const handleDeleteSelected = () => {
         setResidents((prev) => prev.filter((resident) => !selectedResidents.includes(resident.tenantId)));
         setSelectedResidents([]);
     };
-
-    const filteredResidents = residents.filter((resident) =>
-        resident.pesel.includes(searchTerm)
-    );
 
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
@@ -132,45 +94,46 @@ const ManageInhabitantsContent = () => {
                     <div className="mt-6">
                         <label className="block text-2xl font-semibold text-gray-800 dark:text-white mb-4">Mieszkańcy:</label>
                         <div className="overflow-x-auto">
-                            <table className="w-full dark:text-white bg-white text-neutral-800 dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
+                            <table className="w-full bg-white dark:text-white text-neutral-800 dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
                                 <thead>
-                                    <tr>
-                                        <th className="text-center px-4 py-2 border-b-2">Zaznacz</th>
-                                        <th className="text-center px-4 py-2 border-b-2">PESEL</th>
-                                        <th className="text-center px-4 py-2 border-b-2">Imię</th>
-                                        <th className="text-center px-4 py-2 border-b-2">Nazwisko</th>
-                                        <th className="text-center px-4 py-2 border-b-2">Nr telefonu</th>
-                                        <th className="text-center px-4 py-2 border-b-2">Email</th>
-                                        <th className="text-center px-4 py-2 border-b-2">Ilość mieszkańców</th>
-                                    </tr>
+                                <tr>
+                                    <th className="text-center px-4 py-2 border-b-2">Zaznacz</th>
+                                    <th className="text-center px-4 py-2 border-b-2">PESEL</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Imię</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Nazwisko</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Nr telefonu</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Email</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Ilość mieszkańców</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Nr mieszkania</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Klatka schodowa</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Numer bloku</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Ulica</th>
+                                    <th className="text-center px-4 py-2 border-b-2">Miasto</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredResidents.map((resident) => (
-                                        <tr
-                                            key={resident.tenantId}
-                                            className="border-b cursor-pointer"
-                                            onClick={() => handleResidentClick(resident)}
-                                        >
-                                            <td className="text-center px-4 py-2">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedResidents.includes(resident.tenantId)}
-                                                    onChange={(e) => {
-                                                        e.stopPropagation(); // Zapobiegaj propagacji kliknięcia
-                                                        handleCheckboxChange(resident.tenantId);
-                                                    }}
-                                                />
-                                            </td>
-                                            <td className="text-center px-4 py-2">{resident.pesel}</td>
-                                            <td className="text-center px-4 py-2">{resident.name}</td>
-                                            <td className="text-center px-4 py-2">{resident.surname}</td>
-                                            <td className="text-center px-4 py-2">{resident.phoneNumber}</td>
-                                            <td className="text-center px-4 py-2">{resident.mail}</td>
-                                            <td className="text-center px-4 py-2">{resident.tenantsNumber}</td>
-                                            <td className="text-center px-4 py-2">{resident.isBacklog}</td>
-
-                                        </tr>
-                                    ))}
+                                {filteredResidents.map((resident) => (
+                                    <tr key={resident.tenantId} className="border-b">
+                                        <td className="text-center px-4 py-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedResidents.includes(resident.tenantId)}
+                                                onChange={() => handleCheckboxChange(resident.tenantId)}
+                                            />
+                                        </td>
+                                        <td className="text-center px-4 py-2">{resident.pesel}</td>
+                                        <td className="text-center px-4 py-2">{resident.name}</td>
+                                        <td className="text-center px-4 py-2">{resident.surname}</td>
+                                        <td className="text-center px-4 py-2">{resident.phoneNumber}</td>
+                                        <td className="text-center px-4 py-2">{resident.mail}</td>
+                                        <td className="text-center px-4 py-2">{resident.tenantsNumber}</td>
+                                        <td className="text-center px-4 py-2">{resident.flatNumber}</td>
+                                        <td className="text-center px-4 py-2">{resident.staircaseNumber}</td>
+                                        <td className="text-center px-4 py-2">{resident.blockNumber}</td>
+                                        <td className="text-center px-4 py-2">{resident.street}</td>
+                                        <td className="text-center px-4 py-2">{resident.city}</td>
+                                    </tr>
+                                ))}
                                 </tbody>
                             </table>
                         </div>
@@ -187,71 +150,6 @@ const ManageInhabitantsContent = () => {
                         Usuń zaznaczonych
                     </button>
                 </div>
-
-                {/* Modal edycji */}
-                {editingResident && (
-                    <div className="fixed inset-0  bg-black bg-opacity-50 flex items-center justify-center text-neutral-800">
-                        <div className="bg-white dark:bg-neutral-900 p-8 rounded-lg shadow-lg w-96">
-                            <h2 className="text-2xl font-bold mb-4 dark:text-white">Edytuj mieszkańca</h2>
-                            <div className="space-y-4">
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={editingResident.name}
-                                    onChange={handleEditChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white "
-                                    placeholder="Imię"
-                                />
-                                <input
-                                    type="text"
-                                    name="surname"
-                                    value={editingResident.surname}
-                                    onChange={handleEditChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white" 
-                                    placeholder="Nazwisko"
-                                />
-                                <input
-                                    type="text"
-                                    name="phoneNumber"
-                                    value={editingResident.phoneNumber}
-                                    onChange={handleEditChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Nr telefonu"
-                                />
-                                <input
-                                    type="email"
-                                    name="mail"
-                                    value={editingResident.mail}
-                                    onChange={handleEditChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Email"
-                                />
-                                <input
-                                    type="number"
-                                    name="tenantsNumber"
-                                    value={editingResident.tenantsNumber}
-                                    onChange={handleEditChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Ilość mieszkańców"
-                                />
-                            </div>
-                            <div className="mt-6 flex justify-end space-x-4">
-                                <button
-                                    onClick={() => setEditingResident(null)}
-                                    className="bg-gray-500 text-white px-4 py-2 rounded-lg"
-                                >
-                                    Anuluj
-                                </button>
-                                <button
-                                    onClick={handleSaveEdit}
-                                    className="bg-blue-600 dark:bg-emerald-600 text-white px-4 py-2 rounded-lg"
-                                >
-                                    Zapisz
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </main>
         </div>
     );
