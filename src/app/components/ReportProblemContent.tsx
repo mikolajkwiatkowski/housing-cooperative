@@ -49,10 +49,9 @@ const ReportPage: React.FC = () => {
             console.error("Flat ID is not available");
             return;
         }
-
         try {
             const token = localStorage.getItem("token");
-            console.log("Token:", token); // Log the token for debugging
+            console.log("Token:", token);
             const response = await fetch(`http://localhost:8080/api/user/saveAccident`, {
                 method: "POST",
                 headers: {
