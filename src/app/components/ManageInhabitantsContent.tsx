@@ -82,8 +82,6 @@ const ManageInhabitantsContent = () => {
 
     // Funkcja do zapisywania nowego mieszkańca
     const handleSaveNewResident = async () => {
-       
-    
         // Przygotowanie danych do wysłania
         const tenantData = {
             pesel: newResident.pesel,
@@ -91,14 +89,17 @@ const ManageInhabitantsContent = () => {
             surname: newResident.surname,
             phoneNumber: newResident.phoneNumber,
             isBacklog: false,
-            tenantsNumber: newResident.tenantsNumber,
+            tenantsNumber: parseInt(String(newResident.tenantsNumber), 10), // Konwersja na liczbę
             mail: newResident.mail,
-            flatId: newResident.flatId
+            flatId: parseInt(String(newResident.flatId), 10), // Konwersja na liczbę
         };
-    
+
+        // Wypisz JSON do konsoli
+        console.log("Dane do wysłania:", JSON.stringify(tenantData, null, 2));
+
         // Wysyłanie żądania do backendu
         try {
-            const response = await fetch("/api/admin/tenants", {
+            const response = await fetch("http://localhost:8080/api/admin/tenants", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -106,25 +107,25 @@ const ManageInhabitantsContent = () => {
                 },
                 body: JSON.stringify(tenantData),
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json(); // Pobierz szczegóły błędu
                 console.error("Błąd dodawania mieszkańca:", errorData);
                 throw new Error(errorData.message || "Wystąpił problem podczas dodawania mieszkańca.");
             }
-    
+
             const result = await response.json();
             console.log("Mieszkaniec dodany:", result);
-    
+
             setShowAddModal(false); // Zamknij modal po zapisie
         } catch (error) {
             console.error("Błąd:", error);
             alert("Wystąpił błąd podczas dodawania mieszkańca.");
         }
     };
-    
-   
-    
+
+
+
 
     // Funkcja do zapisywania edytowanego mieszkańca
     const handleSaveEditedResident = async () => {
@@ -321,8 +322,16 @@ const ManageInhabitantsContent = () => {
                                     className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
                                     placeholder="Ilość mieszkańców"
                                 />
-                              
-                                
+                                <input
+                                    type="number"
+                                    name="flatId"
+                                    value={newResident.flatId}
+                                    onChange={handleNewResidentChange}
+                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
+                                    placeholder="ID mieszkania"
+                                />
+
+
                             </div>
                             <div className="mt-6 flex justify-end space-x-4">
                                 <button
