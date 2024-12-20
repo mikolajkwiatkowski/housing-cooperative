@@ -33,7 +33,7 @@ const UserContent = (props: Props) => {
                 </div>
               </Link>
               {/* Kafelek 3 */}
-              <Link href="/report" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <Link href="/user_panel/report" className="text-blue-600 font-bold dark:text-emerald-500 block">
               <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
               <MdError className='w-60 h-60  pt-5'/>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Zgłoś problem</h3>
