@@ -3,7 +3,7 @@ import Link from "next/link";
 import UserFooter from './UserFooter';
 import UserNavbar from './UserNavbar';
 import { FaPhone } from "react-icons/fa";
-import { IoIosNotifications } from "react-icons/io";
+import { FaRegUser } from "react-icons/fa";
 import { MdError } from "react-icons/md";
 import { IoWater } from "react-icons/io5";
 import { FaHistory } from "react-icons/fa";
@@ -26,7 +26,7 @@ const UserContent = (props: Props) => {
               </div>
               </Link>
               {/* Kafelek 2 */}
-              <Link href="/contact" className="text-blue-600 font-bold dark:text-emerald-500  block">
+              <Link href="/user_panel/contact" className="text-blue-600 font-bold dark:text-emerald-500  block">
                 <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
                 <FaPhone className='w-52 h-52 pt-5'/>
                   <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Kontakt</h3>
@@ -58,10 +58,10 @@ const UserContent = (props: Props) => {
               </div>
               </Link>
               {/* Kafelek 6 */}
-              <Link href="/notifications" className="text-blue-600 font-bold dark:text-emerald-500  block">
+              <Link href="/user_panel/manage_account" className="text-blue-600 font-bold dark:text-emerald-500  block">
               <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
-              <IoIosNotifications  className='w-60 h-60' />
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Powiadomienia</h3>
+              <FaRegUser  className='w-60 h-60' />
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Zarządzaj kontem</h3>
                  
               </div>
               </Link>

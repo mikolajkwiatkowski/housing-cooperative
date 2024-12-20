@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 const ThemeToggle: React.FC = () => {
   // Stan przechowujący aktualny motyw (ciemny lub jasny)
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>();
 
   useEffect(() => {
     // Sprawdzamy preferencje użytkownika z localStorage lub domyślnie systemowe

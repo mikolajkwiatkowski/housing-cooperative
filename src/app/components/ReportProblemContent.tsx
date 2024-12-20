@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import UserNavbar from "./UserNavbar";
 import UserFooter from "./UserFooter";
-
+import BackButton from "./BackButton";
 const ReportPage: React.FC = () => {
     const [flatId, setFlatId] = useState<number | null>(null);
     const [description, setDescription] = useState("");
@@ -74,9 +74,9 @@ const ReportPage: React.FC = () => {
 
     return (
         <>
-            <UserNavbar />
-            <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
-                <main className="flex-grow p-8 flex justify-center">
+            <div className="flex flex-col bg-gray-100  dark:bg-neutral-800 min-h-screen">
+                <BackButton/>
+                <main className="flex-grow p-8 flex justify-center text-neutral-800 dark:text-white">
                     <div className="bg-white p-6 rounded-lg shadow-xl dark:bg-neutral-900 w-full max-w-2xl">
                         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Zgłoś problem</h2>
                         {flatId !== null ? (
@@ -91,11 +91,12 @@ const ReportPage: React.FC = () => {
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
                                         rows={5}
+                                        required
                                     ></textarea>
                                 </div>
                                 <button
                                     type="submit"
-                                    className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                                    className="dark:bg-emerald-700 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
                                 >
                                     Submit
                                 </button>
@@ -106,7 +107,6 @@ const ReportPage: React.FC = () => {
                     </div>
                 </main>
             </div>
-            <UserFooter />
         </>
     );
 };
