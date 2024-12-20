@@ -3,11 +3,11 @@ import Link from "next/link";
 import AdminFooter from './AdminFooter';
 import AdminNavbar from './AdminNavbar';
 import { FaUser } from "react-icons/fa";
-import { IoIosNotifications } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import { IoWater } from "react-icons/io5";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import {FaCity} from "react-icons/fa";
 type Props = {};
 
 const AdminContent = (props: Props) => {
@@ -58,10 +58,10 @@ const AdminContent = (props: Props) => {
               </div>
               </Link>
               {/* Kafelek 6 */}
-              <Link href="admin_panel/add_notification" className="text-blue-600 font-bold dark:text-emerald-500  block">
+              <Link href="admin_panel/manage_cooperative" className="text-blue-600 font-bold dark:text-emerald-500  block">
               <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
-              <IoIosNotifications  className='w-60 h-60' />
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Wyślij powiadomienie</h3>
+              <FaCity className='w-60 h-60' />
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Zarządzaj współdzielnią</h3>
                  
               </div>
               </Link>
