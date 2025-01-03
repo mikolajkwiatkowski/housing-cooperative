@@ -197,7 +197,7 @@ const ManageInhabitantsContent = () => {
                         id="search"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full px-4 py-3 rounded-lg dark:bg-neutral-700 dark:text-white"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
                         placeholder="Wpisz PESEL"
                     />
                 </div>
@@ -251,11 +251,11 @@ const ManageInhabitantsContent = () => {
                                             <td className="text-center px-4 py-2">{resident.phoneNumber}</td>
                                             <td className="text-center px-4 py-2">{resident.mail}</td>
                                             <td className="text-center px-4 py-2">{resident.tenantsNumber}</td>
-                                           
+
                                             <td className="text-center px-4 py-2">
                                                 <button
                                                     onClick={() => handleEditClick(resident)}
-                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                                    className="bg-blue-500 dark:bg-emerald-700 text-white px-4 py-2 rounded-lg"
                                                 >
                                                     Edytuj
                                                 </button>
@@ -271,67 +271,107 @@ const ManageInhabitantsContent = () => {
                 {/* Modal dodawania nowego mieszkańca */}
                 {showAddModal && (
                     <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-96 dark:bg-neutral-800">
                             <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Dodaj nowego mieszkańca</h2>
                             <div className="space-y-4">
-                                <input
-                                    type="text"
-                                    name="pesel"
-                                    value={newResident.pesel}
-                                    onChange={handleNewResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="PESEL"
-                                />
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={newResident.name}
-                                    onChange={handleNewResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Imię"
-                                />
-                                <input
-                                    type="text"
-                                    name="surname"
-                                    value={newResident.surname}
-                                    onChange={handleNewResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Nazwisko"
-                                />
-                                <input
-                                    type="text"
-                                    name="phoneNumber"
-                                    value={newResident.phoneNumber}
-                                    onChange={handleNewResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Nr telefonu"
-                                />
-                                <input
-                                    type="email"
-                                    name="mail"
-                                    value={newResident.mail}
-                                    onChange={handleNewResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Email"
-                                />
-                                <input
-                                    type="number"
-                                    name="tenantsNumber"
-                                    value={newResident.tenantsNumber}
-                                    onChange={handleNewResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Ilość mieszkańców"
-                                />
-                                <input
-                                    type="number"
-                                    name="flatId"
-                                    value={newResident.flatId}
-                                    onChange={handleNewResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="ID mieszkania"
-                                />
-
-
+                                <div>
+                                    <label htmlFor="pesel" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        PESEL
+                                    </label>
+                                    <input
+                                        id="pesel"
+                                        type="text"
+                                        name="pesel"
+                                        value={newResident.pesel}
+                                        onChange={handleNewResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="PESEL"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Imię
+                                    </label>
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        name="name"
+                                        value={newResident.name}
+                                        onChange={handleNewResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Imię"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="surname" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Nazwisko
+                                    </label>
+                                    <input
+                                        id="surname"
+                                        type="text"
+                                        name="surname"
+                                        value={newResident.surname}
+                                        onChange={handleNewResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Nazwisko"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Nr telefonu
+                                    </label>
+                                    <input
+                                        id="phoneNumber"
+                                        type="text"
+                                        name="phoneNumber"
+                                        value={newResident.phoneNumber}
+                                        onChange={handleNewResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Nr telefonu"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="mail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Email
+                                    </label>
+                                    <input
+                                        id="mail"
+                                        type="email"
+                                        name="mail"
+                                        value={newResident.mail}
+                                        onChange={handleNewResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Email"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="tenantsNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Ilość mieszkańców
+                                    </label>
+                                    <input
+                                        id="tenantsNumber"
+                                        type="number"
+                                        name="tenantsNumber"
+                                        value={newResident.tenantsNumber}
+                                        onChange={handleNewResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Ilość mieszkańców"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="flatId" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        ID mieszkania
+                                    </label>
+                                    <input
+                                        id="flatId"
+                                        type="number"
+                                        name="flatId"
+                                        value={newResident.flatId}
+                                        onChange={handleNewResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="ID mieszkania"
+                                    />
+                                </div>
                             </div>
                             <div className="mt-6 flex justify-end space-x-4">
                                 <button
@@ -350,62 +390,97 @@ const ManageInhabitantsContent = () => {
                         </div>
                     </div>
                 )}
-                
+
                 {/* Modal edytowania mieszkańca */}
                 {showEditModal && editingResident && (
                     <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-96 dark:bg-neutral-800">
                             <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Edytuj mieszkańca</h2>
                             <div className="space-y-4">
-                                <input
-                                    type="text"
-                                    name="pesel"
-                                    value={editingResident.pesel}
-                                    onChange={handleEditResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="PESEL"
-                                />
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={editingResident.name}
-                                    onChange={handleEditResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Imię"
-                                />
-                                <input
-                                    type="text"
-                                    name="surname"
-                                    value={editingResident.surname}
-                                    onChange={handleEditResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Nazwisko"
-                                />
-                                <input
-                                    type="text"
-                                    name="phoneNumber"
-                                    value={editingResident.phoneNumber}
-                                    onChange={handleEditResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Nr telefonu"
-                                />
-                                <input
-                                    type="email"
-                                    name="mail"
-                                    value={editingResident.mail}
-                                    onChange={handleEditResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Email"
-                                />
-                                <input
-                                    type="number"
-                                    name="tenantsNumber"
-                                    value={editingResident.tenantsNumber}
-                                    onChange={handleEditResidentChange}
-                                    className="w-full px-4 py-2 border rounded-lg text-neutral-800 dark:bg-neutral-700 dark:text-white"
-                                    placeholder="Ilość mieszkańców"
-                                />
-                                
+                                <div>
+                                    <label htmlFor="editPesel" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        PESEL
+                                    </label>
+                                    <input
+                                        id="editPesel"
+                                        type="text"
+                                        name="pesel"
+                                        value={editingResident.pesel}
+                                        onChange={handleEditResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="PESEL"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="editName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Imię
+                                    </label>
+                                    <input
+                                        id="editName"
+                                        type="text"
+                                        name="name"
+                                        value={editingResident.name}
+                                        onChange={handleEditResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Imię"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="editSurname" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Nazwisko
+                                    </label>
+                                    <input
+                                        id="editSurname"
+                                        type="text"
+                                        name="surname"
+                                        value={editingResident.surname}
+                                        onChange={handleEditResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Nazwisko"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="editPhoneNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Nr telefonu
+                                    </label>
+                                    <input
+                                        id="editPhoneNumber"
+                                        type="text"
+                                        name="phoneNumber"
+                                        value={editingResident.phoneNumber}
+                                        onChange={handleEditResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Nr telefonu"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="editMail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Email
+                                    </label>
+                                    <input
+                                        id="editMail"
+                                        type="email"
+                                        name="mail"
+                                        value={editingResident.mail}
+                                        onChange={handleEditResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Email"
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="editTenantsNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Ilość mieszkańców
+                                    </label>
+                                    <input
+                                        id="editTenantsNumber"
+                                        type="number"
+                                        name="tenantsNumber"
+                                        value={editingResident.tenantsNumber}
+                                        onChange={handleEditResidentChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                        placeholder="Ilość mieszkańców"
+                                    />
+                                </div>
                             </div>
                             <div className="mt-6 flex justify-end space-x-4">
                                 <button
@@ -424,6 +499,7 @@ const ManageInhabitantsContent = () => {
                         </div>
                     </div>
                 )}
+
             </main>
         </div>
     );

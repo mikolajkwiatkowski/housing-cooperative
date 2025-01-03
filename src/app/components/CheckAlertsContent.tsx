@@ -178,7 +178,7 @@ const CheckAlertsContent = () => {
                         {/* Modal edycji */}
                         {isEditing && selectedAlert && (
                             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                                <div className="bg-white dark:bg-neutral-700 p-6 rounded-lg shadow-lg">
+                                <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg">
                                     <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">
                                         Edytuj alert
                                     </h2>
@@ -190,8 +190,8 @@ const CheckAlertsContent = () => {
                                                 name="accidentDate"
                                                 value={selectedAlert.accidentDate}
                                                 onChange={handleInputChange}
-                                                className="w-full mt-1 p-2 border rounded text-black"
-                                            />
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
+                                                />
                                         </label>
                                         <label className="text-black dark:text-white">
                                             Opis:
@@ -199,8 +199,8 @@ const CheckAlertsContent = () => {
                                                 name="description"
                                                 value={selectedAlert.description}
                                                 onChange={handleInputChange}
-                                                className="w-full mt-1 p-2 border rounded text-black"
-                                            />
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
+                                                />
                                         </label>
                                         <label className="text-black dark:text-white">
                                             Rozwiązany:
@@ -214,20 +214,20 @@ const CheckAlertsContent = () => {
                                                         resolved: !selectedAlert.resolved,
                                                     })
                                                 }
-                                                className="ml-2"
+                                                className="ml-2 "
                                             />
                                         </label>
                                     </div>
                                     <div className="mt-6 flex justify-end gap-4">
                                         <button
                                             onClick={() => setIsEditing(false)}
-                                            className="bg-gray-600 text-white px-4 py-2 rounded-lg"
+                                            className="bg-neutral-600 dark:bg-neutral-700  text-white px-4 py-2 rounded-lg"
                                         >
                                             Anuluj
                                         </button>
                                         <button
                                             onClick={handleSave}
-                                            className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                                            className="bg-blue-600 dark:bg-emerald-700 text-white px-4 py-2 rounded-lg"
                                         >
                                             Zapisz
                                         </button>

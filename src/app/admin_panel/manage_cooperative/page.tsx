@@ -9,7 +9,7 @@ import React, { useState } from "react";
 const NotifiactionPage: React.FC = () => {
 
   return (
-    <div className="flex flex-col bg-gray-900">
+    <div className="flex flex-col bg-white dark:bg-neutral-800">
       <main className="flex-grow">
         <AdminNavbar/>
             <ManageCooperativeContent/>
