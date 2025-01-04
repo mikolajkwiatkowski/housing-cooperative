@@ -11,6 +11,11 @@ type Resident = {
     isBacklog: boolean;
     tenantsNumber: number;
     mail: string;
+    blockNumber: number;
+    staircaseNumber: number;
+    flatNumber: number;
+    street: string;
+    city: string;
     flatId: number;
 };
 
@@ -30,6 +35,11 @@ const ManageInhabitantsContent = () => {
         isBacklog: false,
         tenantsNumber: 0,
         mail: "",
+        blockNumber: 0,
+        staircaseNumber: 0,
+        flatNumber: 0,
+        street: "",
+        city: "",
         flatId: 0
     }); // Stan dla nowego mieszkańca
     const [showAddModal, setShowAddModal] = useState(false); // Stan kontrolujący widoczność modalu
@@ -125,7 +135,32 @@ const ManageInhabitantsContent = () => {
     };
 
 
-
+    const handleDeleteResident = async (tenantId: number) => {
+        if (!window.confirm("Czy na pewno chcesz usunąć tego mieszkańca?")) return;
+    
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch(`http://localhost:8080/api/admin/tenants/${tenantId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+    
+            // Aktualizuj stan, usuwając mieszkańca z listy
+            setResidents((prev) => prev.filter((resident) => resident.tenantId !== tenantId));
+            alert("Mieszkaniec został pomyślnie usunięty.");
+        } catch (err: any) {
+            console.error("Błąd podczas usuwania mieszkańca:", err.message || err);
+            alert("Wystąpił błąd podczas usuwania mieszkańca.");
+        }
+    };
+    
 
     // Funkcja do zapisywania edytowanego mieszkańca
     const handleSaveEditedResident = async () => {
@@ -170,7 +205,7 @@ const ManageInhabitantsContent = () => {
     };
 
     const filteredResidents = residents.filter((resident) =>
-        resident.pesel.includes(searchTerm)
+        resident.name.includes(searchTerm)
     );
 
     return (
@@ -190,7 +225,7 @@ const ManageInhabitantsContent = () => {
                 {/* Wyszukiwanie */}
                 <div>
                     <label htmlFor="search" className="block text-xl font-semibold text-gray-800 dark:text-white mb-2">
-                        Wyszukaj użytkowników po PESEL:
+                        Wyszukaj użytkowników po imieniu:
                     </label>
                     <input
                         type="text"
@@ -198,7 +233,7 @@ const ManageInhabitantsContent = () => {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
-                        placeholder="Wpisz PESEL"
+                        placeholder="Wpisz imieniu"
                     />
                 </div>
 
@@ -251,6 +286,16 @@ const ManageInhabitantsContent = () => {
                                             <td className="text-center px-4 py-2">{resident.phoneNumber}</td>
                                             <td className="text-center px-4 py-2">{resident.mail}</td>
                                             <td className="text-center px-4 py-2">{resident.tenantsNumber}</td>
+                                            <td className="text-center px-4 py-2">{resident.flatNumber}</td>
+                                            <td className="text-center px-4 py-2">{resident.staircaseNumber}</td>
+                                            <td className="text-center px-4 py-2">{resident.blockNumber}</td>
+                                            <td className="text-center px-4 py-2">{resident.street}</td>
+                                            <td className="text-center px-4 py-2">{resident.city}</td>
+
+
+
+
+
 
                                             <td className="text-center px-4 py-2">
                                                 <button
@@ -488,6 +533,12 @@ const ManageInhabitantsContent = () => {
                                     className="bg-gray-500 text-white px-4 py-2 rounded-lg"
                                 >
                                     Anuluj
+                                </button>
+                                <button
+                                    onClick={() => handleDeleteResident(editingResident.tenantId)}
+                                    className="bg-red-600 dark:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+                                >
+                                    Usuń
                                 </button>
                                 <button
                                     onClick={handleSaveEditedResident}
