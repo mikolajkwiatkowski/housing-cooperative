@@ -155,26 +155,26 @@ const ManageCooperativeContent = () => {
                     "Content-Type": "application/json",
                 },
             });
-    
+
             // Sprawdź, czy odpowiedź jest OK
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText}`);
             }
-    
+
             // Sprawdź, czy odpowiedź nie jest pusta
             const text = await response.text();
             console.log("Received response text:", text);  // Zaloguj odpowiedź przed parsowaniem
-    
+
             if (!text) {
                 console.log("No data received for tenants.");
                 setTenants([]);  // Jeśli brak danych, ustaw pustą tablicę
                 return;
             }
-    
+
             // Parsowanie JSON tylko wtedy, gdy odpowiedź zawiera dane
             const rawData = JSON.parse(text);
             console.log("Received tenants data:", rawData);
-    
+
             // Zakładając, że rawData to tablica lub obiekt, możesz sprawdzić jego zawartość
             const tenantData = rawData ? [{
                 tenantId: rawData.tenantId,
@@ -184,7 +184,7 @@ const ManageCooperativeContent = () => {
                 phoneNumber: rawData.phoneNumber,
                 mail: rawData.mail,
             }] : [];
-    
+
             setTenants(tenantData);
         } catch (err: unknown) {
             if (err instanceof Error) {
@@ -194,8 +194,8 @@ const ManageCooperativeContent = () => {
             }
         }
     };
-    
-    
+
+
 
     useEffect(() => {
         fetchBlocks();
@@ -372,6 +372,109 @@ const ManageCooperativeContent = () => {
         }
     };
 
+    ////USUWANIE
+    const handleDeleteBlock = async (blockId: number) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`http://localhost:8080/api/admin/blocks/${blockId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            // Usuń blok z lokalnego stanu
+            setBlocks((prevBlocks) => prevBlocks.filter((block) => block.blockId !== blockId));
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                console.error(`Error deleting block: ${err.message}`);
+            } else {
+                console.error("Unknown error occurred during block deletion.");
+            }
+        }
+    };
+
+    const handleDeleteFlat = async (flatId: number) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`http://localhost:8080/api/admin/flats/${flatId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            // Usuń mieszkanie z lokalnego stanu
+            setFlats((prevFlats) => prevFlats.filter((flat) => flat.flatId !== flatId));
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                console.error(`Error deleting flat: ${err.message}`);
+            } else {
+                console.error("Unknown error occurred during flat deletion.");
+            }
+        }
+    };
+
+    const handleDeleteStaircase = async (staircaseId: number) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await fetch(`http://localhost:8080/api/admin/apartment_staircases/${staircaseId}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            // Usuń klatkę z lokalnego stanu
+            setStaircases((prevStaircases) => prevStaircases.filter((staircase) => staircase.apartmentStaircaseId !== staircaseId));
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                console.error(`Error deleting staircase: ${err.message}`);
+            } else {
+                console.error("Unknown error occurred during staircase deletion.");
+            }
+        }
+    };
+
+    const handleDeleteTenant = async (tenantId: number) => {
+        const token = localStorage.getItem("token");
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/admin/tenants/${tenantId}`, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                console.log("Mieszkaniec został usunięty");
+                // Usuń mieszkańca z lokalnego stanu
+                setTenants((prevTenants) => prevTenants.filter((tenant) => tenant.tenantId !== tenantId));
+            } else {
+                console.error("Błąd podczas usuwania mieszkańca");
+            }
+        } catch (error) {
+            console.error("Wystąpił błąd podczas usuwania mieszkańca:", error);
+        }
+    };
+
+
+
+
+
     const handleEditClick = (item: Block | ApartmentStaircase | Flat) => {
         setEditingItem(item);
         setShowEditModal(true);
@@ -405,7 +508,12 @@ const ManageCooperativeContent = () => {
                                             <div className="font-bold text-lg text-blue-600 dark:text-cyan-500  cursor-pointer" onClick={() => handleEditClick(block)}>
                                                 {block.city}, {block.street} {block.buildingNumber}
                                             </div>
-                                            <button className="ml-2 bg-red-500 text-white px-2 py-1 rounded-lg">Usuń</button>
+                                            <button
+                                                onClick={() => handleDeleteBlock(block.blockId)}
+                                                className="bg-red-500 text-white px-2 py-1 rounded-lg"
+                                            >
+                                                Usuń blok
+                                            </button>
                                         </div>
                                         {selectedBlock && selectedBlock.blockId === block.blockId && (
                                             <div className="ml-4 border-l-2 border-gray-200  pl-4">
@@ -420,7 +528,12 @@ const ManageCooperativeContent = () => {
                                                                 <div className="font-semibold text-md text-green-600 cursor-pointer" onClick={() => handleEditClick(staircase)}>
                                                                     Klatka {staircase.staircaseNumber} (Powierzchnia wspólna: {staircase.sharedSurface})
                                                                 </div>
-                                                                <button className="ml-2 bg-red-500 text-white px-2 py-1 rounded-lg">Usuń</button>
+                                                                <button
+                                                                    onClick={() => handleDeleteStaircase(staircase.apartmentStaircaseId)}
+                                                                    className="bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                >
+                                                                    Usuń klatkę
+                                                                </button>
                                                             </div>
                                                             {selectedStaircase && selectedStaircase.apartmentStaircaseId === staircase.apartmentStaircaseId && (
                                                                 <div className="ml-4 border-l-2 border-gray-200 pl-4">
@@ -435,7 +548,12 @@ const ManageCooperativeContent = () => {
                                                                                     <div className="text-sm text-gray-700 dark:text-yellow-400 cursor-pointer" onClick={() => handleEditClick(flat)}>
                                                                                         Mieszkanie {flat.flatNumber} (Powierzchnia: {flat.surface})
                                                                                     </div>
-                                                                                    <button className="ml-2 bg-red-500 text-white px-2 py-1 rounded-lg">Usuń</button>
+                                                                                    <button
+                                                                                        onClick={() => handleDeleteFlat(flat.flatId)}
+                                                                                        className="bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                                    >
+                                                                                        Usuń mieszkanie
+                                                                                    </button>
                                                                                 </div>
 
                                                                                 {selectedFlat && selectedFlat.flatId === flat.flatId && (
@@ -447,6 +565,12 @@ const ManageCooperativeContent = () => {
                                                                                                     <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
                                                                                                         {tenant.name} {tenant.surname} ({tenant.pesel})
                                                                                                         (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
+                                                                                                        <button
+                                                                                                            onClick={() => handleDeleteTenant(tenant.tenantId)}
+                                                                                                            className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                                                        >
+                                                                                                            Usuń mieszkańca
+                                                                                                        </button>
                                                                                                     </li>
                                                                                                 ))}
                                                                                             </ul>
@@ -456,17 +580,20 @@ const ManageCooperativeContent = () => {
                                                                                             </div>
                                                                                         )}
 
-                                                                                        {/* Przycisk do dodania mieszkańca */}
-                                                                                        <button
-                                                                                            onClick={() => handleAddTenantClick(flat.flatId)}
-                                                                                            className="bg-green-500 text-white px-4 py-2 rounded-lg mb-4"
-                                                                                        >
-                                                                                            Dodaj mieszkańca
-                                                                                        </button>
+                                                                                        {/* Przycisk do dodania mieszkańca - widoczny tylko, gdy brak mieszkańców */}
+                                                                                        {tenants.length === 0 && (
+                                                                                            <button
+                                                                                                onClick={() => handleAddTenantClick(flat.flatId)}
+                                                                                                className="bg-green-500 text-white px-4 py-2 rounded-lg mb-4"
+                                                                                            >
+                                                                                                Dodaj mieszkańca
+                                                                                            </button>
+                                                                                        )}
                                                                                     </div>
                                                                                 )}
                                                                             </li>
                                                                         ))}
+
 
 
                                                                     </ul>
