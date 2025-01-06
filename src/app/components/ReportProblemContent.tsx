@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import UserNavbar from "./UserNavbar";
 import UserFooter from "./UserFooter";
 import BackButton from "./BackButton";
+
 const ReportPage: React.FC = () => {
     const [flatId, setFlatId] = useState<number | null>(null);
     const [description, setDescription] = useState("");
     const [tenantId, setTenantId] = useState<number | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -67,6 +69,10 @@ const ReportPage: React.FC = () => {
 
             const data = await response.json();
             console.log("Report submitted successfully:", data);
+            setSuccessMessage("Alert został wysłany pomyślnie!");
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000); // Odśwież stronę po 2 sekundach
         } catch (error) {
             console.error("Error submitting report:", error);
         }
@@ -94,6 +100,7 @@ const ReportPage: React.FC = () => {
                                         required
                                     ></textarea>
                                 </div>
+                                {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
                                 <button
                                     type="submit"
                                     className="dark:bg-emerald-700 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
