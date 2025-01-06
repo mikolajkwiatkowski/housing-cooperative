@@ -16,12 +16,14 @@ type Flat = {
 };
 
 type Alert = {
-    accidentId: number;
     accidentDate: string;
     description: string;
     flat: Flat;
     resolved: boolean;
+    tenantName?: string; // Dodane właściwości opcjonalne
+    tenantSurname?: string;
 };
+
 
 const CheckAlertsContent = () => {
     const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -32,27 +34,68 @@ const CheckAlertsContent = () => {
     const [newAlert, setNewAlert] = useState<Alert | null>(null);
     const [isAdding, setIsAdding] = useState(false);
     const [flats, setFlats] = useState<{ [key: number]: number }>({}); // Mapowanie numerów mieszkań na flatId
-    const fetchAlerts = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            setIsLoading(true);
-            const response = await fetch("http://localhost:8080/api/admin/accident", {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
-            }
-            const data = await response.json();
-            setAlerts(data.content);
-        } catch (err: any) {
-            setError(err.message || "Wystąpił błąd podczas ładowania danych.");
-        } finally {
-            setIsLoading(false);
+    const [currentPage, setCurrentPage] = useState(1); // Strona obecna
+const [alertsPerPage] = useState(10); // Liczba alertów na stronę
+const [currentPageUnresolved, setCurrentPageUnresolved] = useState(1); // Strona nierozwiązanych
+const [currentPageResolved, setCurrentPageResolved] = useState(1); // Strona rozwiązanych
+const [unresolvedAlerts, setUnresolvedAlerts] = useState<Alert[]>([]);  // State for unresolved alerts
+const [resolvedAlerts, setResolvedAlerts] = useState<Alert[]>([]);      // State for resolved alerts
+
+
+// Liczba rekordów
+const indexOfLastAlert = currentPage * alertsPerPage;
+const indexOfFirstAlert = indexOfLastAlert - alertsPerPage;
+const currentAlerts = alerts.slice(indexOfFirstAlert, indexOfLastAlert);
+
+// Funkcja zmiany strony
+const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+};
+
+const fetchAlerts = async () => {
+    try {
+        const token = localStorage.getItem("token");
+        setIsLoading(true);
+
+        // Pobranie nierozwiązanych alertów
+        const unresolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageUnresolved - 1}&size=${alertsPerPage}&resolved=false`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!unresolvedResponse.ok) {
+            throw new Error(`Error: ${unresolvedResponse.statusText}`);
         }
-    };
+        const unresolvedData = await unresolvedResponse.json();
+        setUnresolvedAlerts(unresolvedData.content); // Ustawienie danych nierozwiązanych
+
+        // Pobranie rozwiązanych alertów
+        const resolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageResolved - 1}&size=${alertsPerPage}&resolved=true`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!resolvedResponse.ok) {
+            throw new Error(`Error: ${resolvedResponse.statusText}`);
+        }
+        const resolvedData = await resolvedResponse.json();
+        setResolvedAlerts(resolvedData.content); // Ustawienie danych rozwiązanych
+    } catch (err: any) {
+        setError(err.message || "Wystąpił błąd podczas ładowania danych.");
+    } finally {
+        setIsLoading(false);
+    }
+};
+const paginateUnresolved = (pageNumber: number) => {
+    setCurrentPageUnresolved(pageNumber);
+};
+
+const paginateResolved = (pageNumber: number) => {
+    setCurrentPageResolved(pageNumber);
+};
+
     const fetchFlats = async () => {
         const response = await fetch("http://localhost:8080/api/admin/flats", {
             headers: {
@@ -70,11 +113,32 @@ const CheckAlertsContent = () => {
             setFlats(flatsMap);
         }
     };
-    
+    const fetchFlatByTenantNameAndSurname = async (tenantName: string, tenantSurname: string) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/admin/flats/getByTenantNameAndSurname/${tenantName}/${tenantSurname}`,
+                {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+            const flat = await response.json();
+            return flat.flatId; // Zwracamy tylko flatId
+        } catch (error: any) {
+            setError(error.message || "Nie udało się pobrać mieszkania.");
+            return null;
+        }
+    };
+
     const saveAccident = async (accident: Alert) => {
         if (newAlert) {
             newAlert.flat.flatId = flats[newAlert.flat.flatNumber] || 0; // Przypisanie flatId
-            console.log("New Alert:", newAlert);  // Dodaj debugowanie
+            console.log("New Alert:", newAlert);  // Debugowanie
         }
         try {
             const token = localStorage.getItem("token");
@@ -90,21 +154,21 @@ const CheckAlertsContent = () => {
                 throw new Error(`Error: ${response.statusText}`);
             }
             const updatedAccident = await response.json();
-            console.log("Updated Accident:", updatedAccident);  // Dodaj debugowanie
+            console.log("Updated Accident:", updatedAccident);  // Debugowanie
             setAlerts((prev) =>
                 prev.map((alert) =>
-                    alert.accidentId === updatedAccident.accidentId ? updatedAccident : alert
+                    alert.flat.flatId === updatedAccident.flat.flatId ? updatedAccident : alert
                 )
             );
         } catch (err: any) {
             setError(err.message || "Wystąpił błąd podczas zapisywania danych.");
         }
     };
-    
+
 
     useEffect(() => {
         fetchAlerts();
-    }, []);
+    }, [currentPage]);
 
     const handleRowClick = (alert: Alert) => {
         setSelectedAlert(alert);
@@ -122,7 +186,6 @@ const CheckAlertsContent = () => {
     };
     const handleAddClick = () => {
         setNewAlert({
-            accidentId: 0, // Placeholder, backend nadpisze.
             accidentDate: new Date().toISOString(),
             description: "",
             flat: {
@@ -150,15 +213,32 @@ const CheckAlertsContent = () => {
             setSelectedAlert(null);
         }
     };
+    
     const handleAddSave = async () => {
         if (newAlert) {
-            console.log("Saving new alert:", newAlert);  // Dodaj debugowanie
-            await saveAccident(newAlert);
+            const { tenantName, tenantSurname, description } = newAlert;
+            if (!tenantName || !tenantSurname || !description) {
+                setError("Wszystkie pola muszą być wypełnione.");
+                return;
+            }
+
+            const flatId = await fetchFlatByTenantNameAndSurname(tenantName, tenantSurname);
+            if (!flatId) {
+                setError("Nie znaleziono mieszkania dla podanego lokatora.");
+                return;
+            }
+
+            const alertToSave = {
+                ...newAlert,
+                flat: { ...newAlert.flat, flatId },
+            };
+
+            await saveAccident(alertToSave);
             setIsAdding(false);
             setNewAlert(null);
         }
     };
-    
+
 
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
@@ -179,39 +259,54 @@ const CheckAlertsContent = () => {
                         </button>
 
                         {/* Nierozwiązane alerty */}
+                        {/* Nierozwiązane alerty */}
                         <section className="mt-6">
-                            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-                                Nierozwiązane alerty
-                            </h2>
-                            <div className="overflow-x-auto text-black dark:text-white">
-                                <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
-                                    <thead>
-                                        <tr>
-                                            <th className="text-center px-4 py-2">Data</th>
-                                            <th className="text-center px-4 py-2">Opis</th>
-                                            <th className="text-center px-4 py-2">Nr mieszkania</th>
-                                            <th className="text-center px-4 py-2">ID mieszkania</th>
+    <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+        Nierozwiązane alerty
+    </h2>
+    <div className="overflow-x-auto text-black dark:text-white">
+        <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
+            <thead>
+                <tr>
+                    <th className="text-center px-4 py-2">Data</th>
+                    <th className="text-center px-4 py-2">Opis</th>
+                    <th className="text-center px-4 py-2">Nr mieszkania</th>
+                    <th className="text-center px-4 py-2">ID mieszkania</th>
+                </tr>
+            </thead>
+            <tbody>
+    {unresolvedAlerts.map((alert) => (
+    <tr key={`${alert.flat.flatId}-${alert.accidentDate}`} className="border-b border-gray-200 dark:border-neutral-600">            <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
+            <td className="text-center px-4 py-2">{alert.description}</td>
+            <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
+            <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+        </tr>
+    ))}
+</tbody>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {alerts.filter((alert) => !alert.resolved).map((alert) => (
-                                            <tr
-                                                key={alert.accidentId}
-                                                className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
-                                                onClick={() => handleRowClick(alert)}
-                                            >
-                                                <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
-                                                <td className="text-center px-4 py-2">{alert.description}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+        </table>
+        {/* Paginacja dla nierozwiązanych alertów */}
+<div className="flex justify-center mt-6">
+    <button
+        onClick={() => paginateUnresolved(currentPageUnresolved - 1)}
+        disabled={currentPageUnresolved === 1} // Wyłącz przycisk, jeśli to pierwsza strona
+        className="px-4 py-2 bg-gray-600 text-white rounded-lg mr-4"
+    >
+        Poprzednia
+    </button>
+    <button
+        onClick={() => paginateUnresolved(currentPageUnresolved + 1)}
+        disabled={unresolvedAlerts.length < alertsPerPage} // Jeśli mniej niż `alertsPerPage`, wyłącz przycisk
+        className="px-4 py-2 bg-gray-600 text-white rounded-lg"
+    >
+        Następna
+    </button>
+</div>
 
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
+    </div>
+</section>
+
+
 
                         {/* Rozwiązane alerty */}
                         <section className="mt-10">
@@ -230,22 +325,40 @@ const CheckAlertsContent = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {alerts.filter((alert) => alert.resolved).map((alert) => (
-                                            <tr
-                                                key={alert.accidentId}
-                                                className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
-                                                onClick={() => handleRowClick(alert)}
-                                            >
-                                                <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
-                                                <td className="text-center px-4 py-2">{alert.description}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+    {resolvedAlerts.map((alert) => (
+        <tr
+            key={`${alert.flat.flatId}-${alert.accidentDate}`} // Możesz użyć kombinacji pól jako `key`
+            className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
+            onClick={() => handleRowClick(alert)}
+        >
+            <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
+            <td className="text-center px-4 py-2">{alert.description}</td>
+            <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
+            <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+        </tr>
+    ))}
+</tbody>
 
-                                            </tr>
-                                        ))}
-                                    </tbody>
                                 </table>
                             </div>
+                            {/* Paginacja dla rozwiązanych alertów */}
+<div className="flex justify-center mt-6">
+    <button
+        onClick={() => paginateResolved(currentPageResolved - 1)}
+        disabled={currentPageResolved === 1} // Wyłącz przycisk, jeśli to pierwsza strona
+        className="px-4 py-2 bg-gray-600 text-white rounded-lg mr-4"
+    >
+        Poprzednia
+    </button>
+    <button
+        onClick={() => paginateResolved(currentPageResolved + 1)}
+        disabled={resolvedAlerts.length < alertsPerPage} // Jeśli mniej niż `alertsPerPage`, wyłącz przycisk
+        className="px-4 py-2 bg-gray-600 text-white rounded-lg"
+    >
+        Następna
+    </button>
+</div>
+
                         </section>
 
                         {/* Modal edycji */}
@@ -316,20 +429,36 @@ const CheckAlertsContent = () => {
                                     </h2>
                                     <div className="flex flex-col gap-4">
                                         <label className="text-black dark:text-white">
-                                            Data:
+                                            Imię lokatora:
                                             <input
-                                                type="datetime-local"
-                                                name="accidentDate"
-                                                value={newAlert.accidentDate}
+                                                type="text"
+                                                name="tenantName"
+                                                value={newAlert?.tenantName || ""}
                                                 onChange={(e) =>
                                                     setNewAlert((prev) => ({
                                                         ...prev!,
-                                                        accidentDate: e.target.value,
+                                                        tenantName: e.target.value,
                                                     }))
                                                 }
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
                                             />
                                         </label>
+                                        <label className="text-black dark:text-white">
+                                            Nazwisko lokatora:
+                                            <input
+                                                type="text"
+                                                name="tenantSurname"
+                                                value={newAlert?.tenantSurname || ""}
+                                                onChange={(e) =>
+                                                    setNewAlert((prev) => ({
+                                                        ...prev!,
+                                                        tenantSurname: e.target.value,
+                                                    }))
+                                                }
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
+                                            />
+                                        </label>
+
                                         <label className="text-black dark:text-white">
                                             Opis:
                                             <textarea
@@ -344,24 +473,7 @@ const CheckAlertsContent = () => {
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
                                             />
                                         </label>
-                                        <label className="text-black dark:text-white">
-                                    Numer mieszkania:
-                                    <input
-                                        type="number"
-                                        name="flatNumber"
-                                        value={newAlert.flat.flatNumber}
-                                        onChange={(e) =>
-                                            setNewAlert((prev) => ({
-                                                ...prev!,
-                                                flat: {
-                                                    ...prev!.flat,
-                                                    flatNumber: parseInt(e.target.value, 10),
-                                                },
-                                            }))
-                                        }
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                                    />
-                                </label>
+
                                     </div>
                                     <div className="mt-6 flex justify-end gap-4">
                                         <button

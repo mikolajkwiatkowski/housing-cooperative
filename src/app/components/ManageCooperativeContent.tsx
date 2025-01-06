@@ -541,58 +541,58 @@ const ManageCooperativeContent = () => {
                                                                         Dodaj mieszkanie
                                                                     </button>
                                                                     <ul className="space-y-1 mt-2">
-                                                                    {flats.map((flat) => (
-    <li key={flat.flatId} className="mb-2">
-        <div className="flex items-center">
-            <button onClick={() => handleFlatClick(flat)} className="mr-2 text-neutral-700 dark:text-yellow-400">▶</button>
-            <div className="text-sm text-gray-700 dark:text-yellow-400 cursor-pointer" onClick={() => handleEditClick(flat)}>
-                Mieszkanie {flat.flatNumber} (Powierzchnia: {flat.surface})
-            </div>
-            <button
-                onClick={() => handleDeleteFlat(flat.flatId)}
-                className="bg-red-500 text-white px-2 py-1 rounded-lg"
-            >
-                Usuń mieszkanie
-            </button>
-        </div>
+                                                                        {flats.map((flat) => (
+                                                                            <li key={flat.flatId} className="mb-2">
+                                                                                <div className="flex items-center">
+                                                                                    <button onClick={() => handleFlatClick(flat)} className="mr-2 text-neutral-700 dark:text-yellow-400">▶</button>
+                                                                                    <div className="text-sm text-gray-700 dark:text-yellow-400 cursor-pointer" onClick={() => handleEditClick(flat)}>
+                                                                                        Mieszkanie {flat.flatNumber} (Powierzchnia: {flat.surface})
+                                                                                    </div>
+                                                                                    <button
+                                                                                        onClick={() => handleDeleteFlat(flat.flatId)}
+                                                                                        className="bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                                    >
+                                                                                        Usuń mieszkanie
+                                                                                    </button>
+                                                                                </div>
 
-        {selectedFlat && selectedFlat.flatId === flat.flatId && (
-            <div className="ml-4 border-l-2 border-gray-200 pl-4">
-                {/* Sprawdzamy, czy istnieją jacyś najemcy powiązani z tym mieszkaniem */}
-                {tenants.length > 0 ? (
-                    <ul className="space-y-1 mt-2 ml-4">
-                        {tenants.map((tenant) => (
-                            <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
-                                {tenant.name} {tenant.surname} ({tenant.pesel})
-                                (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
-                                <button
-                                    onClick={() => handleDeleteTenant(tenant.tenantId)}
-                                    className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
-                                >
-                                    Usuń mieszkańca
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <div className="text-sm text-gray-700 dark:text-white font-bold">
-                        Brak przypisanego mieszkańca
-                    </div>
-                )}
+                                                                                {selectedFlat && selectedFlat.flatId === flat.flatId && (
+                                                                                    <div className="ml-4 border-l-2 border-gray-200 pl-4">
+                                                                                        {/* Sprawdzamy, czy istnieją jacyś najemcy powiązani z tym mieszkaniem */}
+                                                                                        {tenants.length > 0 ? (
+                                                                                            <ul className="space-y-1 mt-2 ml-4">
+                                                                                                {tenants.map((tenant) => (
+                                                                                                    <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
+                                                                                                        {tenant.name} {tenant.surname} ({tenant.pesel})
+                                                                                                        (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
+                                                                                                        <button
+                                                                                                            onClick={() => handleDeleteTenant(tenant.tenantId)}
+                                                                                                            className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                                                        >
+                                                                                                            Usuń mieszkańca
+                                                                                                        </button>
+                                                                                                    </li>
+                                                                                                ))}
+                                                                                            </ul>
+                                                                                        ) : (
+                                                                                            <div className="text-sm text-gray-700 dark:text-white font-bold">
+                                                                                                Brak przypisanego mieszkańca
+                                                                                            </div>
+                                                                                        )}
 
-                {/* Przycisk do dodania mieszkańca - widoczny tylko, gdy brak mieszkańców */}
-                {tenants.length === 0 && (
-                    <button
-                        onClick={() => handleAddTenantClick(flat.flatId)}
-                        className="bg-green-500 text-white px-4 py-2 rounded-lg mb-4"
-                    >
-                        Dodaj mieszkańca
-                    </button>
-                )}
-            </div>
-        )}
-    </li>
-))}
+                                                                                        {/* Przycisk do dodania mieszkańca - widoczny tylko, gdy brak mieszkańców */}
+                                                                                        {tenants.length === 0 && (
+                                                                                            <button
+                                                                                                onClick={() => handleAddTenantClick(flat.flatId)}
+                                                                                                className="bg-green-500 text-white px-4 py-2 rounded-lg mb-4"
+                                                                                            >
+                                                                                                Dodaj mieszkańca
+                                                                                            </button>
+                                                                                        )}
+                                                                                    </div>
+                                                                                )}
+                                                                            </li>
+                                                                        ))}
 
 
 
