@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
+import useAuth from "@/app/useAuth";
 
 const ReportPage: React.FC = () => {
     const [flatId, setFlatId] = useState<number | null>(null);
@@ -86,7 +87,7 @@ const ReportPage: React.FC = () => {
             console.error("Error submitting report:", error);
         }
     };
-
+    useAuth();
     return (
         <>
             <div className="flex flex-col bg-gray-100  dark:bg-neutral-800 min-h-screen">

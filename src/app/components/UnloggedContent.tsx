@@ -1,7 +1,9 @@
+"use client";
 import React from 'react'
 import Link from "next/link";
 import UnloggedNavbar from './UnloggedNavbar';
 import UnloggedFooter from './UnloggedFooter';
+import useAuth from "@/app/useAuth";
 
 type Props = {}
 

@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
+import useAuth from "@/app/useAuth";
 
 type Invoice = {
     invoiceId: number;
@@ -51,7 +52,7 @@ const CheckInvoicesContent = () => {
         setSelectedInvoice(invoice);
         setIsEditing(true);
     };
-
+    useAuth();
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
             <BackButton />

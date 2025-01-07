@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
+import useAuth from "@/app/useAuth";
 
 // Typowanie danych z API
 type WaterConsumptionLog = {
@@ -31,6 +32,7 @@ type MeterReading = {
 };
 
 const CheckWaterLogsContent = () => {
+    useAuth();
     const [currentReading, setCurrentReading] = useState<MeterReading | null>(null);
     const [previousReading, setPreviousReading] = useState<MeterReading | null>(null);
     const [isLoading, setIsLoading] = useState(false);

@@ -1,6 +1,8 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
 import 'tailwindcss/tailwind.css';
+import useAuth from "@/app/useAuth";
 
 type Block = {
     blockId: number;
@@ -484,7 +486,7 @@ const ManageCooperativeContent = () => {
         // Save the edited item
         setShowEditModal(false);
     };
-
+    useAuth();
     return (
         <div className="container mx-auto mt-4 ">
             <BackButton />

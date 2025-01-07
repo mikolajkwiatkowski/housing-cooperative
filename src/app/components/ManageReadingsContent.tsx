@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
+import useAuth from "@/app/useAuth";
 
 const ManageReadingsContent = () => {
     const [cost, setCost] = useState<string>("");
@@ -166,7 +167,7 @@ const ManageReadingsContent = () => {
             setFormError((err as Error).message || "An error occurred while saving the cost.");
         }
     };
-
+    useAuth();
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
             <BackButton />

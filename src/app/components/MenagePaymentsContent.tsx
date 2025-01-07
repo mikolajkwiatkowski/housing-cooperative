@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import useAuth from "@/app/useAuth";
 
 const MenagePaymentsContent = () => {
     const [backlogTenants, setBacklogTenants] = useState<any[]>([]);
@@ -103,7 +104,7 @@ const MenagePaymentsContent = () => {
         tenant.name.toLowerCase().includes(nonBacklogSearch.toLowerCase()) ||
         tenant.surname.toLowerCase().includes(nonBacklogSearch.toLowerCase())
     );
-
+    useAuth();
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen p-8">
             <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">

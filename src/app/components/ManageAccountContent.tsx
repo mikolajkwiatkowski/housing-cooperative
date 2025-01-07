@@ -1,8 +1,10 @@
+
 "use client";
 
 import { useState } from "react";
 import ManageAccountPage from "../user_panel/manage_account/page";
 import BackButton from "./BackButton";
+import useAuth from "@/app/useAuth";
 
 // Funkcja do dekodowania tokena JWT
 const decodeToken = (token: string) => {
@@ -84,7 +86,7 @@ const ManageAccountContent: React.FC = () => {
       setIsLoading(false); // Wyłączenie stanu ładowania
     }
   };
-
+  useAuth();
   return (
     <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
         <BackButton/>

@@ -1,8 +1,10 @@
+"use client";
 import React from 'react';
 import { FaPhone } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { IoPerson } from "react-icons/io5";
 import BackButton from './BackButton';
+import useAuth from "@/app/useAuth";
 
 type Contact = {
   name: string;
@@ -39,6 +41,7 @@ const contacts: Contact[] = [
 ];
 
 const ContactContent: React.FC = () => {
+  useAuth();
   return (
     <>
       <div id="main-container" className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">

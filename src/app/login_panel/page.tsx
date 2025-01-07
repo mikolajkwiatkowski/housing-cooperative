@@ -49,7 +49,7 @@ const Page: React.FC = () => {
             router.push("/admin_panel");
           }
         } else {
-          setError("Failed to fetch user role");
+          setError("Niepoprawne dane logowania!");
           setSuccessMessage(null); // Clear any previous success message
         }
       } else {

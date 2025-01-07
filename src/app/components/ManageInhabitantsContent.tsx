@@ -1,5 +1,7 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
+import useAuth from "@/app/useAuth";
 
 // Typ dla mieszkańca
 type Resident = {
@@ -207,7 +209,7 @@ const ManageInhabitantsContent = () => {
     const filteredResidents = residents.filter((resident) =>
         resident.name.includes(searchTerm)
     );
-
+    useAuth();
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
             <BackButton />

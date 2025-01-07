@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import Link from "next/link";
 import UserFooter from './UserFooter';
@@ -8,9 +9,11 @@ import { MdError } from "react-icons/md";
 import { IoWater } from "react-icons/io5";
 import { FaHistory } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
+import useAuth from "@/app/useAuth";
 type Props = {};
 
 const UserContent = (props: Props) => {
+  useAuth();
   return (
       <>
         <UserNavbar />

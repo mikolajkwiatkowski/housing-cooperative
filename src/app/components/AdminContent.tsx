@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import Link from "next/link";
 import AdminFooter from './AdminFooter';
@@ -8,10 +9,12 @@ import { IoWater } from "react-icons/io5";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { FaCity } from "react-icons/fa";
+import useAuth from "@/app/useAuth";
 
 type Props = {};
 
 const AdminContent = (props: Props) => {
+  useAuth();
   return (
       <>
         <div id="main-container" className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
