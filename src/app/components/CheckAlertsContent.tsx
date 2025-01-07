@@ -273,19 +273,21 @@ const CheckAlertsContent = () => {
                                             <th className="text-center px-4 py-2">Data</th>
                                             <th className="text-center px-4 py-2">Opis</th>
                                             <th className="text-center px-4 py-2">Nr mieszkania</th>
-                                            <th className="text-center px-4 py-2">ID mieszkania</th>
+                                            <th className="text-center px-4 py-2">Adres</th> {/* Nowa kolumna */}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {unresolvedAlerts.map((alert) => (
-                                            <tr key={`${alert.flat.flatId}-${alert.accidentDate}`} className="border-b border-gray-200 dark:border-neutral-600">            <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
+                                            <tr key={`${alert.flat.flatId}-${alert.accidentDate}`} className="border-b border-gray-200 dark:border-neutral-600">
+                                                <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
                                                 <td className="text-center px-4 py-2">{alert.description}</td>
                                                 <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+                                                <td className="text-center px-4 py-2">
+                                                    {`${alert.flat.apartmentStaircase.block.street}, ${alert.flat.apartmentStaircase.block.buildingNumber}, ${alert.flat.apartmentStaircase.block.city}`}
+                                                </td> {/* Wyświetlanie pełnego adresu */}
                                             </tr>
                                         ))}
                                     </tbody>
-
                                 </table>
                                 {/* Paginacja dla nierozwiązanych alertów */}
                                 <div className="flex justify-center mt-6">
@@ -304,11 +306,8 @@ const CheckAlertsContent = () => {
                                         Następna
                                     </button>
                                 </div>
-
                             </div>
                         </section>
-
-
 
                         {/* Rozwiązane alerty */}
                         <section className="mt-10">
@@ -322,25 +321,25 @@ const CheckAlertsContent = () => {
                                             <th className="text-center px-4 py-2">Data</th>
                                             <th className="text-center px-4 py-2">Opis</th>
                                             <th className="text-center px-4 py-2">Nr mieszkania</th>
-                                            <th className="text-center px-4 py-2">ID mieszkania</th>
-
+                                            <th className="text-center px-4 py-2">Adres</th> {/* Nowa kolumna */}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {resolvedAlerts.map((alert) => (
                                             <tr
-                                                key={`${alert.flat.flatId}-${alert.accidentDate}`} // Możesz użyć kombinacji pól jako `key`
+                                                key={`${alert.flat.flatId}-${alert.accidentDate}`}
                                                 className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
                                                 onClick={() => handleRowClick(alert)}
                                             >
                                                 <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
                                                 <td className="text-center px-4 py-2">{alert.description}</td>
                                                 <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+                                                <td className="text-center px-4 py-2">
+                                                    {`${alert.flat.apartmentStaircase.block.street}, ${alert.flat.apartmentStaircase.block.buildingNumber}, ${alert.flat.apartmentStaircase.block.city}`}
+                                                </td> {/* Wyświetlanie pełnego adresu */}
                                             </tr>
                                         ))}
                                     </tbody>
-
                                 </table>
                             </div>
                             {/* Paginacja dla rozwiązanych alertów */}
@@ -360,8 +359,8 @@ const CheckAlertsContent = () => {
                                     Następna
                                 </button>
                             </div>
-
                         </section>
+
 
                         {/* Modal edycji */}
                         {isEditing && selectedAlert && (
