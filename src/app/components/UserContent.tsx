@@ -15,7 +15,7 @@ const UserContent = (props: Props) => {
     <>
       <UserNavbar />
       <div id="main-container" className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
-        <main className="flex-grow p-8 flex justify-center">
+        <main className="flex-grow p-8 flex justify-center mt-5">
           <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-2 mt-14">
             {/* Kafelek 1 */}
             <Link href="/payments" className="text-blue-600 font-bold dark:text-emerald-500 block">

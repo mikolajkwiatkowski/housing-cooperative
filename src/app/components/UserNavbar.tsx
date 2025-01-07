@@ -4,17 +4,19 @@ import ThemeToggle from "../components/ThemeToggle";
 
 const UserNavbar: React.FC = () => {
   return (
-    <nav className="bg-blue-700 p-4 dark:bg-neutral-900 fixed top-0 w-full z-50">
+    <nav className="bg-blue-700 p-4 dark:bg-neutral-900 fixed top-0 w-full z-40">
       <div className="flex items-center">
-        <div className="absolute left-4">
-          <ThemeToggle />
-        </div>
-
-        <Link href="/" className="text-white text-2xl font-bold pl-52">
-          Portal infomacyjny SM Wyrzysk
+        {/* Link z nazwą portalu */}
+        <Link href="/" className="text-white text-2xl font-bold">
+          Portal informacyjny SM Wyrzysk
         </Link>
 
-        <div className="ml-auto">
+        {/* Sekcja po prawej stronie */}
+        <div className="ml-auto flex items-center space-x-4">
+          {/* ThemeToggle */}
+          <ThemeToggle />
+
+          {/* Guzik Wyloguj się */}
           <Link
             href="/"
             className="text-white bg-blue-600 font-bold hover:bg-blue-800 rounded-3xl p-3 dark:bg-emerald-600 dark:hover:bg-emerald-800"

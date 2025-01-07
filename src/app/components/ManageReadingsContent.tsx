@@ -172,12 +172,12 @@ const ManageReadingsContent = () => {
             <BackButton />
             <main className="flex-grow flex flex-col p-8">
                 <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
-                    Manage Water Cost
+                    Zarządzaj ceną wody
                 </h1>
                 <form onSubmit={handleSubmit} className="bg-white dark:bg-neutral-700 p-6 rounded-lg shadow-lg self-center w-1/3">
                     <div className="mb-4">
                         <label className="block text-black dark:text-white mb-2" htmlFor="cost">
-                            Cost per m³ (PLN):
+                            Cena za m³ (PLN):
                         </label>
                         <input
                             type="text"
@@ -191,7 +191,7 @@ const ManageReadingsContent = () => {
                     </div>
                     {currentCost !== null && (
                         <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            Current cost per m³: <strong>{currentCost} PLN</strong>
+                            Aktualna cena za m³: <strong>{currentCost} PLN</strong>
                         </p>
                     )}
                     {formError && <p className="text-red-500 mb-4">{formError}</p>}
@@ -205,22 +205,22 @@ const ManageReadingsContent = () => {
                 </form>
                 <section className="mt-10">
                     <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-                        Meter Readings
+                        Odczyty liczników
                     </h2>
                     <button
                         onClick={() => setIsAdding(true)}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg mb-4"
+                        className="bg-green-600 dark:bg-emerald-600 text-white px-4 py-2 rounded-lg mb-4"
                     >
-                        Add
+                        Dodaj
                     </button>
                     <div className="overflow-x-auto text-black dark:text-white">
                         <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
                             <thead>
                             <tr>
-                                <th className="text-center px-4 py-2">Reading ID</th>
-                                <th className="text-center px-4 py-2">Tenant Name</th>
-                                <th className="text-center px-4 py-2">Reading Date</th>
-                                <th className="text-center px-4 py-2">Meter Reading</th>
+                                <th className="text-center px-4 py-2">ID odczytu</th>
+                                <th className="text-center px-4 py-2">Imię i nazwisko mieszkańca</th>
+                                <th className="text-center px-4 py-2">Data odczytu</th>
+                                <th className="text-center px-4 py-2">Wartość licznika</th>
                             </tr>
                             </thead>
                             <tbody>

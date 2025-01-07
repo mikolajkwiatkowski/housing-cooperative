@@ -14,7 +14,7 @@ const AdminContent = (props: Props) => {
   return (
     <>
       <div id="main-container" className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
-        <main className="flex-grow p-8 flex justify-center">
+        <main className="flex-grow p-8 flex justify-center mt-5">
           <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-2 mt-14">
             {/* Kafelek 1 */}
             <Link href="/admin_panel/payments" className="text-blue-600 font-bold dark:text-emerald-500 block">
@@ -53,7 +53,7 @@ const AdminContent = (props: Props) => {
               <Link href="/history" className="text-blue-600 font-bold dark:text-emerald-500 block">
               <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
                 <FaFileInvoiceDollar className='w-56 h-56 pt-6'/>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Faktury</h3>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Naliczenia</h3>
                 
               </div>
               </Link>

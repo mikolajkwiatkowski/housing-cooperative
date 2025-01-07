@@ -189,14 +189,14 @@ const CheckWaterLogsContent = () => {
                             {/* Tabela z odczytami */}
                             <section className="mt-10 w-1/3 p-4 bg-white dark:bg-neutral-700 rounded-lg shadow-lg">
                                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
-                                    Zadeklarowane stany liczników
+                                Zadeklarowane zużycie wody
                                 </h2>
                                 <div className="overflow-x-auto text-black dark:text-white">
                                     <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
                                         <thead>
                                         <tr>
                                             <th className="text-center px-4 py-2">Data deklaracji</th>
-                                            <th className="text-center px-4 py-2">Zadeklarowane zużycie (m³)</th>
+                                            <th className="text-center px-4 py-2">Obecny stan licznika (m³)</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -238,7 +238,7 @@ const CheckWaterLogsContent = () => {
                             {/* Tabela z różnicą */}
                             <section className="mt-10 w-1/3 p-4 bg-white dark:bg-neutral-700 rounded-lg shadow-lg">
                                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
-                                    Prognozowane zużycie wody
+                                Ilość zużytych metrów wody
                                 </h2>
                                 <div className="overflow-x-auto text-black dark:text-white">
                                     <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">

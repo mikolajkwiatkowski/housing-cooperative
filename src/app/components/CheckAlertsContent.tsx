@@ -35,66 +35,66 @@ const CheckAlertsContent = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [flats, setFlats] = useState<{ [key: number]: number }>({}); // Mapowanie numerów mieszkań na flatId
     const [currentPage, setCurrentPage] = useState(1); // Strona obecna
-const [alertsPerPage] = useState(10); // Liczba alertów na stronę
-const [currentPageUnresolved, setCurrentPageUnresolved] = useState(1); // Strona nierozwiązanych
-const [currentPageResolved, setCurrentPageResolved] = useState(1); // Strona rozwiązanych
-const [unresolvedAlerts, setUnresolvedAlerts] = useState<Alert[]>([]);  // State for unresolved alerts
-const [resolvedAlerts, setResolvedAlerts] = useState<Alert[]>([]);      // State for resolved alerts
+    const [alertsPerPage] = useState(10); // Liczba alertów na stronę
+    const [currentPageUnresolved, setCurrentPageUnresolved] = useState(1); // Strona nierozwiązanych
+    const [currentPageResolved, setCurrentPageResolved] = useState(1); // Strona rozwiązanych
+    const [unresolvedAlerts, setUnresolvedAlerts] = useState<Alert[]>([]);  // State for unresolved alerts
+    const [resolvedAlerts, setResolvedAlerts] = useState<Alert[]>([]);      // State for resolved alerts
 
 
-// Liczba rekordów
-const indexOfLastAlert = currentPage * alertsPerPage;
-const indexOfFirstAlert = indexOfLastAlert - alertsPerPage;
-const currentAlerts = alerts.slice(indexOfFirstAlert, indexOfLastAlert);
+    // Liczba rekordów
+    const indexOfLastAlert = currentPage * alertsPerPage;
+    const indexOfFirstAlert = indexOfLastAlert - alertsPerPage;
+    const currentAlerts = alerts.slice(indexOfFirstAlert, indexOfLastAlert);
 
-// Funkcja zmiany strony
-const paginate = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-};
+    // Funkcja zmiany strony
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
 
-const fetchAlerts = async () => {
-    try {
-        const token = localStorage.getItem("token");
-        setIsLoading(true);
+    const fetchAlerts = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            setIsLoading(true);
 
-        // Pobranie nierozwiązanych alertów
-        const unresolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageUnresolved - 1}&size=${alertsPerPage}&resolved=false`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-        if (!unresolvedResponse.ok) {
-            throw new Error(`Error: ${unresolvedResponse.statusText}`);
+            // Pobranie nierozwiązanych alertów
+            const unresolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageUnresolved - 1}&size=${alertsPerPage}&resolved=false`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!unresolvedResponse.ok) {
+                throw new Error(`Error: ${unresolvedResponse.statusText}`);
+            }
+            const unresolvedData = await unresolvedResponse.json();
+            setUnresolvedAlerts(unresolvedData.content); // Ustawienie danych nierozwiązanych
+
+            // Pobranie rozwiązanych alertów
+            const resolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageResolved - 1}&size=${alertsPerPage}&resolved=true`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!resolvedResponse.ok) {
+                throw new Error(`Error: ${resolvedResponse.statusText}`);
+            }
+            const resolvedData = await resolvedResponse.json();
+            setResolvedAlerts(resolvedData.content); // Ustawienie danych rozwiązanych
+        } catch (err: any) {
+            setError(err.message || "Wystąpił błąd podczas ładowania danych.");
+        } finally {
+            setIsLoading(false);
         }
-        const unresolvedData = await unresolvedResponse.json();
-        setUnresolvedAlerts(unresolvedData.content); // Ustawienie danych nierozwiązanych
+    };
+    const paginateUnresolved = (pageNumber: number) => {
+        setCurrentPageUnresolved(pageNumber);
+    };
 
-        // Pobranie rozwiązanych alertów
-        const resolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageResolved - 1}&size=${alertsPerPage}&resolved=true`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-        if (!resolvedResponse.ok) {
-            throw new Error(`Error: ${resolvedResponse.statusText}`);
-        }
-        const resolvedData = await resolvedResponse.json();
-        setResolvedAlerts(resolvedData.content); // Ustawienie danych rozwiązanych
-    } catch (err: any) {
-        setError(err.message || "Wystąpił błąd podczas ładowania danych.");
-    } finally {
-        setIsLoading(false);
-    }
-};
-const paginateUnresolved = (pageNumber: number) => {
-    setCurrentPageUnresolved(pageNumber);
-};
-
-const paginateResolved = (pageNumber: number) => {
-    setCurrentPageResolved(pageNumber);
-};
+    const paginateResolved = (pageNumber: number) => {
+        setCurrentPageResolved(pageNumber);
+    };
 
     const fetchFlats = async () => {
         const response = await fetch("http://localhost:8080/api/admin/flats", {
@@ -213,7 +213,7 @@ const paginateResolved = (pageNumber: number) => {
             setSelectedAlert(null);
         }
     };
-    
+
     const handleAddSave = async () => {
         if (newAlert) {
             const { tenantName, tenantSurname, description } = newAlert;
@@ -253,7 +253,7 @@ const paginateResolved = (pageNumber: number) => {
                     <>
                         <button
                             onClick={handleAddClick}
-                            className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded-lg mb-6"
+                            className="bg-green-600 dark:bg-emerald-600 text-white px-4 py-2 rounded-lg mb-6"
                         >
                             Dodaj Alert
                         </button>
@@ -261,57 +261,57 @@ const paginateResolved = (pageNumber: number) => {
                         {/* Nierozwiązane alerty */}
                         {/* Nierozwiązane alerty */}
                         <section className="mt-6">
-    <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-        Nierozwiązane alerty
-    </h2>
-    <div className="overflow-x-auto text-black dark:text-white">
-        <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
-            <thead>
-                <tr>
-                    <th className="text-center px-4 py-2">Data</th>
-                    <th className="text-center px-4 py-2">Opis</th>
-                    <th className="text-center px-4 py-2">Nr mieszkania</th>
-                    <th className="text-center px-4 py-2">ID mieszkania</th>
-                </tr>
-            </thead>
-            <tbody>
-    {unresolvedAlerts.map((alert) => (
-    <tr key={`${alert.flat.flatId}-${alert.accidentDate}`} className="border-b border-gray-200 dark:border-neutral-600">            <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
-            <td className="text-center px-4 py-2">{alert.description}</td>
-            <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-            <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
-        </tr>
-    ))}
-</tbody>
+                            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
+                                Nowe zgłoszenia
+                            </h2>
+                            <div className="overflow-x-auto text-black dark:text-white">
+                                <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
+                                    <thead>
+                                        <tr>
+                                            <th className="text-center px-4 py-2">Data</th>
+                                            <th className="text-center px-4 py-2">Opis</th>
+                                            <th className="text-center px-4 py-2">Nr mieszkania</th>
+                                            <th className="text-center px-4 py-2">ID mieszkania</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {unresolvedAlerts.map((alert) => (
+                                            <tr key={`${alert.flat.flatId}-${alert.accidentDate}`} className="border-b border-gray-200 dark:border-neutral-600">            <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
+                                                <td className="text-center px-4 py-2">{alert.description}</td>
+                                                <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
+                                                <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
 
-        </table>
-        {/* Paginacja dla nierozwiązanych alertów */}
-<div className="flex justify-center mt-6">
-    <button
-        onClick={() => paginateUnresolved(currentPageUnresolved - 1)}
-        disabled={currentPageUnresolved === 1} // Wyłącz przycisk, jeśli to pierwsza strona
-        className="px-4 py-2 bg-gray-600 text-white rounded-lg mr-4"
-    >
-        Poprzednia
-    </button>
-    <button
-        onClick={() => paginateUnresolved(currentPageUnresolved + 1)}
-        disabled={unresolvedAlerts.length < alertsPerPage} // Jeśli mniej niż `alertsPerPage`, wyłącz przycisk
-        className="px-4 py-2 bg-gray-600 text-white rounded-lg"
-    >
-        Następna
-    </button>
-</div>
+                                </table>
+                                {/* Paginacja dla nierozwiązanych alertów */}
+                                <div className="flex justify-center mt-6">
+                                    <button
+                                        onClick={() => paginateUnresolved(currentPageUnresolved - 1)}
+                                        disabled={currentPageUnresolved === 1} // Wyłącz przycisk, jeśli to pierwsza strona
+                                        className="px-4 py-2 bg-gray-600 text-white rounded-lg mr-4"
+                                    >
+                                        Poprzednia
+                                    </button>
+                                    <button
+                                        onClick={() => paginateUnresolved(currentPageUnresolved + 1)}
+                                        disabled={unresolvedAlerts.length < alertsPerPage} // Jeśli mniej niż `alertsPerPage`, wyłącz przycisk
+                                        className="px-4 py-2 bg-gray-600 text-white rounded-lg"
+                                    >
+                                        Następna
+                                    </button>
+                                </div>
 
-    </div>
-</section>
+                            </div>
+                        </section>
 
 
 
                         {/* Rozwiązane alerty */}
                         <section className="mt-10">
                             <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-                                Rozwiązane alerty
+                                Historia zgłoszeń
                             </h2>
                             <div className="overflow-x-auto text-black dark:text-white">
                                 <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
@@ -325,39 +325,39 @@ const paginateResolved = (pageNumber: number) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-    {resolvedAlerts.map((alert) => (
-        <tr
-            key={`${alert.flat.flatId}-${alert.accidentDate}`} // Możesz użyć kombinacji pól jako `key`
-            className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
-            onClick={() => handleRowClick(alert)}
-        >
-            <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
-            <td className="text-center px-4 py-2">{alert.description}</td>
-            <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-            <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
-        </tr>
-    ))}
-</tbody>
+                                        {resolvedAlerts.map((alert) => (
+                                            <tr
+                                                key={`${alert.flat.flatId}-${alert.accidentDate}`} // Możesz użyć kombinacji pól jako `key`
+                                                className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
+                                                onClick={() => handleRowClick(alert)}
+                                            >
+                                                <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
+                                                <td className="text-center px-4 py-2">{alert.description}</td>
+                                                <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
+                                                <td className="text-center px-4 py-2">{alert.flat.flatId}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
 
                                 </table>
                             </div>
                             {/* Paginacja dla rozwiązanych alertów */}
-<div className="flex justify-center mt-6">
-    <button
-        onClick={() => paginateResolved(currentPageResolved - 1)}
-        disabled={currentPageResolved === 1} // Wyłącz przycisk, jeśli to pierwsza strona
-        className="px-4 py-2 bg-gray-600 text-white rounded-lg mr-4"
-    >
-        Poprzednia
-    </button>
-    <button
-        onClick={() => paginateResolved(currentPageResolved + 1)}
-        disabled={resolvedAlerts.length < alertsPerPage} // Jeśli mniej niż `alertsPerPage`, wyłącz przycisk
-        className="px-4 py-2 bg-gray-600 text-white rounded-lg"
-    >
-        Następna
-    </button>
-</div>
+                            <div className="flex justify-center mt-6">
+                                <button
+                                    onClick={() => paginateResolved(currentPageResolved - 1)}
+                                    disabled={currentPageResolved === 1} // Wyłącz przycisk, jeśli to pierwsza strona
+                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg mr-4"
+                                >
+                                    Poprzednia
+                                </button>
+                                <button
+                                    onClick={() => paginateResolved(currentPageResolved + 1)}
+                                    disabled={resolvedAlerts.length < alertsPerPage} // Jeśli mniej niż `alertsPerPage`, wyłącz przycisk
+                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg"
+                                >
+                                    Następna
+                                </button>
+                            </div>
 
                         </section>
 
