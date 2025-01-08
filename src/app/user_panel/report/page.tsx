@@ -2,6 +2,7 @@ import React from "react";
 import UserNavbar from "@/app/components/UserNavbar";
 import UserFooter from "@/app/components/UserFooter";
 import ReportProblemContent from "@/app/components/ReportProblemContent";
+import withProtectedPage from "@/app/components/withProtectedPage";
 
 const ReportPage: React.FC = () => {
 
@@ -16,4 +17,4 @@ const ReportPage: React.FC = () => {
     );
 };
 
-export default ReportPage;
+export default withProtectedPage(ReportPage);

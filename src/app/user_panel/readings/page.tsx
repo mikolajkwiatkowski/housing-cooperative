@@ -2,6 +2,7 @@ import React from "react";
 import UserNavbar from "@/app/components/UserNavbar";
 import UserFooter from "@/app/components/UserFooter";
 import ReadingsContent from "@/app/components/ReadingsContent";
+import withProtectedPage from "@/app/components/withProtectedPage";
 
 const ReadingsPage: React.FC = () => {
 
@@ -16,4 +17,4 @@ const ReadingsPage: React.FC = () => {
     );
 };
 
-export default ReadingsPage;
+export default withProtectedPage(ReadingsPage);

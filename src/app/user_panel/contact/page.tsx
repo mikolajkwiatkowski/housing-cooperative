@@ -3,6 +3,7 @@ import UserNavbar from "@/app/components/UserNavbar";
 import UserFooter from "@/app/components/UserFooter";
 import ReportProblemContent from "@/app/components/ReportProblemContent";
 import ContactContent from "@/app/components/ContactContent";
+import withProtectedPage from "@/app/components/withProtectedPage";
 
 const ContactPage: React.FC = () => {
 
@@ -17,4 +18,4 @@ const ContactPage: React.FC = () => {
     );
 };
 
-export default ContactPage;
+export default withProtectedPage(ContactPage);
