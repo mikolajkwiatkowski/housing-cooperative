@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import BackButton from "./BackButton";
 import useAuth from "@/app/useAuth";
@@ -22,10 +21,9 @@ type Alert = {
     description: string;
     flat: Flat;
     resolved: boolean;
-    tenantName?: string; // Dodane właściwości opcjonalne
+    tenantName?: string;
     tenantSurname?: string;
 };
-
 
 const CheckAlertsContent = () => {
     const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -37,12 +35,10 @@ const CheckAlertsContent = () => {
     const [isAdding, setIsAdding] = useState(false);
     const [flats, setFlats] = useState<{ [key: number]: number }>({}); // Mapowanie numerów mieszkań na flatId
     const [currentPage, setCurrentPage] = useState(1); // Strona obecna
-    const [alertsPerPage] = useState(10); // Liczba alertów na stronę
-    const [currentPageUnresolved, setCurrentPageUnresolved] = useState(1); // Strona nierozwiązanych
+    const [alertsPerPage] = useState(100); // Liczba alertów na stronę
     const [currentPageResolved, setCurrentPageResolved] = useState(1); // Strona rozwiązanych
-    const [unresolvedAlerts, setUnresolvedAlerts] = useState<Alert[]>([]);  // State for unresolved alerts
-    const [resolvedAlerts, setResolvedAlerts] = useState<Alert[]>([]);      // State for resolved alerts
-
+    const [resolvedAlerts, setResolvedAlerts] = useState<Alert[]>([]); // State for resolved alerts
+    const [sortConfig, setSortConfig] = useState<{ key: string; direction: string } | null>(null); // Sort configuration
 
     // Liczba rekordów
     const indexOfLastAlert = currentPage * alertsPerPage;
@@ -58,19 +54,6 @@ const CheckAlertsContent = () => {
         try {
             const token = localStorage.getItem("token");
             setIsLoading(true);
-
-            // Pobranie nierozwiązanych alertów
-            const unresolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageUnresolved - 1}&size=${alertsPerPage}&resolved=false`, {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!unresolvedResponse.ok) {
-                throw new Error(`Error: ${unresolvedResponse.statusText}`);
-            }
-            const unresolvedData = await unresolvedResponse.json();
-            setUnresolvedAlerts(unresolvedData.content); // Ustawienie danych nierozwiązanych
 
             // Pobranie rozwiązanych alertów
             const resolvedResponse = await fetch(`http://localhost:8080/api/admin/accident?page=${currentPageResolved - 1}&size=${alertsPerPage}&resolved=true`, {
@@ -90,9 +73,6 @@ const CheckAlertsContent = () => {
             setIsLoading(false);
         }
     };
-    const paginateUnresolved = (pageNumber: number) => {
-        setCurrentPageUnresolved(pageNumber);
-    };
 
     const paginateResolved = (pageNumber: number) => {
         setCurrentPageResolved(pageNumber);
@@ -107,7 +87,7 @@ const CheckAlertsContent = () => {
         });
         if (response.ok) {
             const data = await response.json();
-            console.log("Flats:", data);  // Dodaj debugowanie
+            console.log("Flats:", data); // Dodaj debugowanie
             const flatsMap = data.reduce((acc: { [key: number]: number }, flat: Flat) => {
                 acc[flat.flatNumber] = flat.flatId;
                 return acc;
@@ -115,6 +95,7 @@ const CheckAlertsContent = () => {
             setFlats(flatsMap);
         }
     };
+
     const fetchFlatByTenantNameAndSurname = async (tenantName: string, tenantSurname: string) => {
         try {
             const response = await fetch(
@@ -130,6 +111,7 @@ const CheckAlertsContent = () => {
                 throw new Error(`Error: ${response.statusText}`);
             }
             const flat = await response.json();
+            console.log("Flat by tenant:", flat); // Debugowanie
             return flat.flatId; // Zwracamy tylko flatId
         } catch (error: any) {
             setError(error.message || "Nie udało się pobrać mieszkania.");
@@ -140,7 +122,7 @@ const CheckAlertsContent = () => {
     const saveAccident = async (accident: Alert) => {
         if (newAlert) {
             newAlert.flat.flatId = flats[newAlert.flat.flatNumber] || 0; // Przypisanie flatId
-            console.log("New Alert:", newAlert);  // Debugowanie
+            console.log("New Alert:", newAlert); // Debugowanie
         }
         try {
             const token = localStorage.getItem("token");
@@ -156,7 +138,7 @@ const CheckAlertsContent = () => {
                 throw new Error(`Error: ${response.statusText}`);
             }
             const updatedAccident = await response.json();
-            console.log("Updated Accident:", updatedAccident);  // Debugowanie
+            console.log("Updated Accident:", updatedAccident); // Debugowanie
             setAlerts((prev) =>
                 prev.map((alert) =>
                     alert.flat.flatId === updatedAccident.flat.flatId ? updatedAccident : alert
@@ -166,7 +148,6 @@ const CheckAlertsContent = () => {
             setError(err.message || "Wystąpił błąd podczas zapisywania danych.");
         }
     };
-
 
     useEffect(() => {
         fetchAlerts();
@@ -186,6 +167,7 @@ const CheckAlertsContent = () => {
             });
         }
     };
+
     const handleAddClick = () => {
         setNewAlert({
             accidentDate: new Date().toISOString(),
@@ -213,6 +195,7 @@ const CheckAlertsContent = () => {
             await saveAccident(selectedAlert);
             setIsEditing(false);
             setSelectedAlert(null);
+            window.location.reload(); // Refresh the page
         }
     };
 
@@ -238,16 +221,36 @@ const CheckAlertsContent = () => {
             await saveAccident(alertToSave);
             setIsAdding(false);
             setNewAlert(null);
+            window.location.reload(); // Refresh the page
         }
     };
+
+    const handleSort = (key: string) => {
+        let direction = "ascending";
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === "ascending") {
+            direction = "descending";
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const sortedAlerts = [...resolvedAlerts].sort((a, b) => {
+        if (sortConfig !== null) {
+            const { key, direction } = sortConfig;
+            if (a[key] < b[key]) {
+                return direction === "ascending" ? -1 : 1;
+            }
+            if (a[key] > b[key]) {
+                return direction === "ascending" ? 1 : -1;
+            }
+        }
+        return 0;
+    });
 
     useAuth();
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
             <BackButton />
             <main className="flex-grow flex flex-col p-8">
-
-
                 {isLoading && <p className="text-center text-gray-600 dark:text-white">Ładowanie...</p>}
                 {error && <p className="text-center text-red-500">{error}</p>}
 
@@ -260,55 +263,6 @@ const CheckAlertsContent = () => {
                             Dodaj Alert
                         </button>
 
-                        {/* Nierozwiązane alerty */}
-                        {/* Nierozwiązane alerty */}
-                        <section className="mt-6">
-                            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
-                                Nowe zgłoszenia
-                            </h2>
-                            <div className="overflow-x-auto text-black dark:text-white">
-                                <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
-                                    <thead>
-                                        <tr>
-                                            <th className="text-center px-4 py-2">Data</th>
-                                            <th className="text-center px-4 py-2">Opis</th>
-                                            <th className="text-center px-4 py-2">Nr mieszkania</th>
-                                            <th className="text-center px-4 py-2">Adres</th> {/* Nowa kolumna */}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {unresolvedAlerts.map((alert) => (
-                                            <tr key={`${alert.flat.flatId}-${alert.accidentDate}`} className="border-b border-gray-200 dark:border-neutral-600">
-                                                <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
-                                                <td className="text-center px-4 py-2">{alert.description}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-                                                <td className="text-center px-4 py-2">
-                                                    {`${alert.flat.apartmentStaircase.block.street}, ${alert.flat.apartmentStaircase.block.buildingNumber}, ${alert.flat.apartmentStaircase.block.city}`}
-                                                </td> {/* Wyświetlanie pełnego adresu */}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {/* Paginacja dla nierozwiązanych alertów */}
-                                <div className="flex justify-center mt-6">
-                                    <button
-                                        onClick={() => paginateUnresolved(currentPageUnresolved - 1)}
-                                        disabled={currentPageUnresolved === 1} // Wyłącz przycisk, jeśli to pierwsza strona
-                                        className="px-4 py-2 bg-gray-600 text-white rounded-lg mr-4"
-                                    >
-                                        Poprzednia
-                                    </button>
-                                    <button
-                                        onClick={() => paginateUnresolved(currentPageUnresolved + 1)}
-                                        disabled={unresolvedAlerts.length < alertsPerPage} // Jeśli mniej niż `alertsPerPage`, wyłącz przycisk
-                                        className="px-4 py-2 bg-gray-600 text-white rounded-lg"
-                                    >
-                                        Następna
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
-
                         {/* Rozwiązane alerty */}
                         <section className="mt-10">
                             <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">
@@ -317,28 +271,42 @@ const CheckAlertsContent = () => {
                             <div className="overflow-x-auto text-black dark:text-white">
                                 <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
                                     <thead>
-                                        <tr>
-                                            <th className="text-center px-4 py-2">Data</th>
-                                            <th className="text-center px-4 py-2">Opis</th>
-                                            <th className="text-center px-4 py-2">Nr mieszkania</th>
-                                            <th className="text-center px-4 py-2">Adres</th> {/* Nowa kolumna */}
-                                        </tr>
+                                    <tr>
+                                        <th className="text-center px-4 py-2 cursor-pointer" onClick={() => handleSort("accidentDate")}>
+                                            Data
+                                        </th>
+                                        <th className="text-center px-4 py-2 cursor-pointer" onClick={() => handleSort("description")}>
+                                            Opis
+                                        </th>
+                                        <th className="text-center px-4 py-2 cursor-pointer" onClick={() => handleSort("flat.flatNumber")}>
+                                            Nr mieszkania
+                                        </th>
+                                        <th className="text-center px-4 py-2 cursor-pointer" onClick={() => handleSort("flat.apartmentStaircase.block.street")}>
+                                            Adres
+                                        </th>
+                                        <th className="text-center px-4 py-2 cursor-pointer" onClick={() => handleSort("resolved")}>
+                                            Status
+                                        </th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {resolvedAlerts.map((alert) => (
-                                            <tr
-                                                key={`${alert.flat.flatId}-${alert.accidentDate}`}
-                                                className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
-                                                onClick={() => handleRowClick(alert)}
-                                            >
-                                                <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
-                                                <td className="text-center px-4 py-2">{alert.description}</td>
-                                                <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
-                                                <td className="text-center px-4 py-2">
-                                                    {`${alert.flat.apartmentStaircase.block.street}, ${alert.flat.apartmentStaircase.block.buildingNumber}, ${alert.flat.apartmentStaircase.block.city}`}
-                                                </td> {/* Wyświetlanie pełnego adresu */}
-                                            </tr>
-                                        ))}
+                                    {sortedAlerts.map((alert) => (
+                                        <tr
+                                            key={`${alert.flat.flatId}-${alert.accidentDate}`}
+                                            className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
+                                            onClick={() => handleRowClick(alert)}
+                                        >
+                                            <td className="text-center px-4 py-2">{new Date(alert.accidentDate).toLocaleString()}</td>
+                                            <td className="text-center px-4 py-2">{alert.description}</td>
+                                            <td className="text-center px-4 py-2">{alert.flat.flatNumber}</td>
+                                            <td className="text-center px-4 py-2">
+                                                {`${alert.flat.apartmentStaircase.block.street}, ${alert.flat.apartmentStaircase.block.buildingNumber}, ${alert.flat.apartmentStaircase.block.city}`}
+                                            </td>
+                                            <td className="text-center px-4 py-2">
+                                                {alert.resolved ? "Rozwiązany" : "Nierozwiązany"}
+                                            </td>
+                                        </tr>
+                                    ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -360,7 +328,6 @@ const CheckAlertsContent = () => {
                                 </button>
                             </div>
                         </section>
-
 
                         {/* Modal edycji */}
                         {isEditing && selectedAlert && (
@@ -408,7 +375,7 @@ const CheckAlertsContent = () => {
                                     <div className="mt-6 flex justify-end gap-4">
                                         <button
                                             onClick={() => setIsEditing(false)}
-                                            className="bg-neutral-600 dark:bg-neutral-700  text-white px-4 py-2 rounded-lg"
+                                            className="bg-neutral-600 dark:bg-neutral-700 text-white px-4 py-2 rounded-lg"
                                         >
                                             Anuluj
                                         </button>
@@ -474,7 +441,6 @@ const CheckAlertsContent = () => {
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
                                             />
                                         </label>
-
                                     </div>
                                     <div className="mt-6 flex justify-end gap-4">
                                         <button
@@ -493,7 +459,6 @@ const CheckAlertsContent = () => {
                                 </div>
                             </div>
                         )}
-
                     </>
                 )}
             </main>
