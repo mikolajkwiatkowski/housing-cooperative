@@ -108,16 +108,16 @@ const MenagePaymentsContent = () => {
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen p-8">
             <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
-                Manage Payments
+                Zarządzanie Płatnościami
             </h1>
             {formError && <p className="text-red-500 mb-4">{formError}</p>}
             <section className="mb-10">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                    Backlog Tenants
+                    Najemcy z Zaległościami
                 </h2>
                 <input
                     type="text"
-                    placeholder="Search backlog tenants..."
+                    placeholder="Szukaj najemców z zaległościami..."
                     value={backlogSearch}
                     onChange={(e) => setBacklogSearch(e.target.value)}
                     className="mb-4 p-2 rounded-lg border border-gray-300"
@@ -126,12 +126,12 @@ const MenagePaymentsContent = () => {
                     <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
                         <thead>
                         <tr>
-                            <th className="text-center px-4 py-2">Tenant ID</th>
-                            <th className="text-center px-4 py-2">Name</th>
-                            <th className="text-center px-4 py-2">Surname</th>
+                            <th className="text-center px-4 py-2">ID Najemcy</th>
+                            <th className="text-center px-4 py-2">Imię</th>
+                            <th className="text-center px-4 py-2">Nazwisko</th>
                             <th className="text-center px-4 py-2">Email</th>
-                            <th className="text-center px-4 py-2">Phone</th>
-                            <th className="text-center px-4 py-2">Actions</th>
+                            <th className="text-center px-4 py-2">Telefon</th>
+                            <th className="text-center px-4 py-2">Akcje</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -147,7 +147,7 @@ const MenagePaymentsContent = () => {
                                         onClick={() => updateBacklogStatus(tenant.tenantId, false)}
                                         className="bg-red-600 text-white px-4 py-2 rounded-lg"
                                     >
-                                        Cancel Backlog
+                                        Anuluj Zaległość
                                     </button>
                                 </td>
                             </tr>
@@ -158,11 +158,11 @@ const MenagePaymentsContent = () => {
             </section>
             <section>
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                    Non-Backlog Tenants
+                    Najemcy bez Zaległości
                 </h2>
                 <input
                     type="text"
-                    placeholder="Search non-backlog tenants..."
+                    placeholder="Szukaj najemców bez zaległości..."
                     value={nonBacklogSearch}
                     onChange={(e) => setNonBacklogSearch(e.target.value)}
                     className="mb-4 p-2 rounded-lg border border-gray-300"
@@ -171,12 +171,12 @@ const MenagePaymentsContent = () => {
                     <table className="w-full bg-white dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
                         <thead>
                         <tr>
-                            <th className="text-center px-4 py-2">Tenant ID</th>
-                            <th className="text-center px-4 py-2">Name</th>
-                            <th className="text-center px-4 py-2">Surname</th>
+                            <th className="text-center px-4 py-2">ID Najemcy</th>
+                            <th className="text-center px-4 py-2">Imię</th>
+                            <th className="text-center px-4 py-2">Nazwisko</th>
                             <th className="text-center px-4 py-2">Email</th>
-                            <th className="text-center px-4 py-2">Phone</th>
-                            <th className="text-center px-4 py-2">Actions</th>
+                            <th className="text-center px-4 py-2">Telefon</th>
+                            <th className="text-center px-4 py-2">Akcje</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -192,7 +192,7 @@ const MenagePaymentsContent = () => {
                                         onClick={() => updateBacklogStatus(tenant.tenantId, true)}
                                         className="bg-green-600 text-white px-4 py-2 rounded-lg"
                                     >
-                                        Mark as Backlog
+                                        Oznacz jako Zaległość
                                     </button>
                                 </td>
                             </tr>
