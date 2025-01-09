@@ -4,6 +4,8 @@ import ManageCooperativeContent from "@/app/components/ManageCooperativeContent"
 import AdminFooter from "@/app/components/AdminFooter";
 import AdminNavbar from "@/app/components/AdminNavbar";
 import React, { useState } from "react";
+import withProtectedPage from "@/app/components/withProtectedPage";
+import ProtectedPage from "@/app/components/withProtectedPage";
 
 
 const NotifiactionPage: React.FC = () => {
@@ -19,4 +21,4 @@ const NotifiactionPage: React.FC = () => {
   );
 };
 
-export default NotifiactionPage;
+export default withProtectedPage(NotifiactionPage);

@@ -4,6 +4,7 @@ import UserFooter from "@/app/components/UserFooter";
 import ReportProblemContent from "@/app/components/ReportProblemContent";
 import ContactContent from "@/app/components/ContactContent";
 import PaidInvoicesContent from "@/app/components/PaidInvoicesContent";
+import withProtectedPage from "@/app/components/withProtectedPage";
 
 const PaidInoivcesPage: React.FC = () => {
 
@@ -18,4 +19,4 @@ const PaidInoivcesPage: React.FC = () => {
     );
 };
 
-export default PaidInoivcesPage;
+export default withProtectedPage(PaidInoivcesPage);
