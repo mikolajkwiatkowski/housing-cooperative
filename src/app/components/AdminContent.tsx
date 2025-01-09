@@ -49,7 +49,7 @@ const AdminContent = (props: Props) => {
                 </div>
               </Link>
               {/* Kafelek 5 */}
-              <Link href="/history" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <Link href="/admin_panel/invoices" className="text-blue-600 font-bold dark:text-emerald-500 block">
                 <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
                   <FaFileInvoiceDollar className='w-56 h-56 pt-6'/>
                   <h3 className="text-2xl font-semibold text-gray-900 mb-4 dark:text-white">Naliczenia</h3>
