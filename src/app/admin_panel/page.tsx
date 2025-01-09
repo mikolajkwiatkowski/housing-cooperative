@@ -4,7 +4,6 @@ import React from "react";
 import AdminContent from "../components/AdminContent";
 import AdminNavbar from "../components/AdminNavbar";
 import AdminFooter from "../components/AdminFooter";
-import ProtectedPage from "@/app/components/withProtectedPage";
 import withProtectedPage from "@/app/components/withProtectedPage"; // Import HOC
 
 const AdminPage: React.FC = () => {
