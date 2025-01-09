@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import UserNavbar from "@/app/components/UserNavbar";
 import UserFooter from "@/app/components/UserFooter";
