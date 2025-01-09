@@ -27,6 +27,7 @@ type Alert = {
 
 const CheckAlertsContent = () => {
     const [alerts, setAlerts] = useState<Alert[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -246,6 +247,12 @@ const CheckAlertsContent = () => {
         return 0;
     });
 
+    const filteredAlerts = sortedAlerts.filter(alert =>
+        alert.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        alert.flat.flatNumber.toString().includes(searchTerm.toLowerCase()) ||
+        alert.flat.apartmentStaircase.block.street.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     useAuth();
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen">
@@ -262,6 +269,14 @@ const CheckAlertsContent = () => {
                         >
                             Dodaj Alert
                         </button>
+
+                        <input
+                            type="text"
+                            placeholder="Szukaj alertów..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="mb-4 p-2 rounded-lg border border-gray-300"
+                        />
 
                         {/* Rozwiązane alerty */}
                         <section className="mt-10">
@@ -290,7 +305,7 @@ const CheckAlertsContent = () => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {sortedAlerts.map((alert) => (
+                                    {filteredAlerts.map((alert) => (
                                         <tr
                                             key={`${alert.flat.flatId}-${alert.accidentDate}`}
                                             className="border-b border-gray-200 dark:border-neutral-600 hover:bg-gray-200 dark:hover:bg-neutral-600 cursor-pointer"
@@ -384,6 +399,76 @@ const CheckAlertsContent = () => {
                                             className="bg-blue-600 dark:bg-emerald-700 text-white px-4 py-2 rounded-lg"
                                         >
                                             Zapisz
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {isAdding && newAlert && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                                <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg">
+                                    <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">
+                                        Dodaj nowy alert
+                                    </h2>
+                                    <div className="flex flex-col gap-4">
+                                        <label className="text-black dark:text-white">
+                                            Imię lokatora:
+                                            <input
+                                                type="text"
+                                                name="tenantName"
+                                                value={newAlert?.tenantName || ""}
+                                                onChange={(e) =>
+                                                    setNewAlert((prev) => ({
+                                                        ...prev!,
+                                                        tenantName: e.target.value,
+                                                    }))
+                                                }
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
+                                            />
+                                        </label>
+                                        <label className="text-black dark:text-white">
+                                            Nazwisko lokatora:
+                                            <input
+                                                type="text"
+                                                name="tenantSurname"
+                                                value={newAlert?.tenantSurname || ""}
+                                                onChange={(e) =>
+                                                    setNewAlert((prev) => ({
+                                                        ...prev!,
+                                                        tenantSurname: e.target.value,
+                                                    }))
+                                                }
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
+                                            />
+                                        </label>
+
+                                        <label className="text-black dark:text-white">
+                                            Opis:
+                                            <textarea
+                                                name="description"
+                                                value={newAlert.description}
+                                                onChange={(e) =>
+                                                    setNewAlert((prev) => ({
+                                                        ...prev!,
+                                                        description: e.target.value,
+                                                    }))
+                                                }
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
+                                            />
+                                        </label>
+                                    </div>
+                                    <div className="mt-6 flex justify-end gap-4">
+                                        <button
+                                            onClick={() => setIsAdding(false)}
+                                            className="bg-neutral-600 dark:bg-neutral-700 text-white px-4 py-2 rounded-lg"
+                                        >
+                                            Anuluj
+                                        </button>
+                                        <button
+                                            onClick={handleAddSave}
+                                            className="bg-green-600 dark:bg-green-700 text-white px-4 py-2 rounded-lg"
+                                        >
+                                            Dodaj
                                         </button>
                                     </div>
                                 </div>
