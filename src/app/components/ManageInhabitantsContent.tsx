@@ -171,45 +171,45 @@ const ManageInhabitantsContent = () => {
 
     // Funkcja do zapisywania edytowanego mieszkańca
     const handleSaveEditedResident = async () => {
-        if (!editingResident) return;
-    
-        const tenantData = {
-            pesel: editingResident.pesel,
-            name: editingResident.name,
-            surname: editingResident.surname,
-            phoneNumber: editingResident.phoneNumber,
-            mail: editingResident.mail,
-            tenantsNumber: editingResident.tenantsNumber,
-        };
-    
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch(`http://localhost:8080/api/admin/tenants/${editingResident.tenantId}`, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(tenantData),
-            });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Błąd podczas edytowania mieszkańca:", errorData);
-                throw new Error(errorData.message || "Wystąpił problem podczas edytowania mieszkańca.");
-            }
-    
-            // Po edycji pobierz ponownie całą listę mieszkańców
-            await fetchResidents();
-    
-            setShowEditModal(false);
-            setEditingResident(null);
-        } catch (err: any) {
-            console.error("Błąd:", err.message || err);
-            alert("Wystąpił błąd podczas edytowania mieszkańca.");
-        }
+    if (!editingResident) return;
+
+    const tenantData = {
+        pesel: editingResident.pesel,
+        name: editingResident.name,
+        surname: editingResident.surname,
+        phoneNumber: editingResident.phoneNumber,
+        mail: editingResident.mail,
+        tenantsNumber: editingResident.tenantsNumber,
     };
-    
+
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`http://localhost:8080/api/admin/tenants/${editingResident.tenantId}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(tenantData),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Błąd podczas edytowania mieszkańca:", errorData);
+            throw new Error(errorData.message || "Wystąpił problem podczas edytowania mieszkańca.");
+        }
+
+        // Po edycji pobierz ponownie całą listę mieszkańców
+        await fetchResidents();
+
+        setShowEditModal(false);
+        setEditingResident(null);
+    } catch (err: any) {
+        console.error("Błąd:", err.message || err);
+        alert("Wystąpił błąd podczas edytowania mieszkańca.");
+    }
+};
+
     
     
 

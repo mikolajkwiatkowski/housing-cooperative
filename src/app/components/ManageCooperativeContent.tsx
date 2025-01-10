@@ -32,6 +32,7 @@ type Tenant = {
     pesel: string;
     phoneNumber: string;
     mail: string;
+    flat: Flat;
 };
 
 const ManageCooperativeContent = () => {
@@ -178,14 +179,23 @@ const ManageCooperativeContent = () => {
             console.log("Received tenants data:", rawData);
 
             // Zakładając, że rawData to tablica lub obiekt, możesz sprawdzić jego zawartość
-            const tenantData = rawData ? [{
-                tenantId: rawData.tenantId,
-                pesel: rawData.pesel,
-                name: rawData.name,
-                surname: rawData.surname,
-                phoneNumber: rawData.phoneNumber,
-                mail: rawData.mail,
-            }] : [];
+            const tenantData = Array.isArray(rawData)
+                ? rawData.map((tenant: any) => ({
+                    tenantId: tenant.tenantId,
+                    pesel: tenant.pesel,
+                    name: tenant.name,
+                    surname: tenant.surname,
+                    phoneNumber: tenant.phoneNumber,
+                    mail: tenant.mail,
+                    flat: {
+                        flatId: tenant.flatId,
+                        flatNumber: tenant.flatNumber,
+                        surface: tenant.surface,
+                        apartmentStaircase: tenant.apartmentStaircase
+                    }
+                }))
+                : [];
+
 
             setTenants(tenantData);
         } catch (err: unknown) {
@@ -196,6 +206,9 @@ const ManageCooperativeContent = () => {
             }
         }
     };
+
+
+
 
 
 
@@ -234,7 +247,16 @@ const ManageCooperativeContent = () => {
         }
     };
     const handleAddStaircase = async () => {
-        if (!selectedBlock) return; // Upewnij się, że blok jest wybrany
+        if (!selectedBlock) {
+            console.error("Blok nie został wybrany.");
+            return;
+        }
+        console.log("Wybrany blok:", selectedBlock);
+        console.log("Dane do wysłania:", JSON.stringify({
+            staircaseNumber: newStaircase.staircaseNumber,
+            sharedSurface: newStaircase.sharedSurface,
+            block: { blockId: selectedBlock.blockId }
+        }));
 
         const token = localStorage.getItem("token");
         try {
@@ -245,10 +267,11 @@ const ManageCooperativeContent = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    staircaseNumber: newStaircase.staircaseNumber,
-                    sharedSurface: newStaircase.sharedSurface,
+                    staircaseNumber: Number(newStaircase.staircaseNumber),
+                    sharedSurface: Number(newStaircase.sharedSurface),
                     block: { blockId: selectedBlock.blockId }
                 })
+
             });
 
             if (!response.ok) {
@@ -277,15 +300,44 @@ const ManageCooperativeContent = () => {
         isBacklog: false,
         tenantsNumber: 1,
     });
+
     const [showAddTenantModal, setShowAddTenantModal] = useState(false);
     const handleAddTenantClick = (flatId: number) => {
         setSelectedFlatId(flatId); // Ustawiamy ID mieszkania, dla którego dodajemy mieszkańca
         setShowAddTenantModal(true); // Pokazujemy formularz
     };
     const handleAddTenant = async () => {
-        if (!selectedFlatId) return; // Upewnij się, że flatId zostało ustawione
+        if (!selectedFlatId) {
+            console.log("No flat ID selected");
+            return; // Ensure flatId is set before proceeding
+        }
 
         const token = localStorage.getItem("token");
+        if (!token) {
+            console.log("Token not found in localStorage");
+            return; // Ensure token is available before proceeding
+        }
+
+        // Ensure all fields have been filled before submission
+        if (!newTenant.name || !newTenant.surname || !newTenant.pesel || !newTenant.phoneNumber || !newTenant.mail) {
+            console.log("Please fill all required fields");
+            return;
+        }
+
+        // Data for the new tenant
+        const tenantData = {
+            name: newTenant.name,
+            surname: newTenant.surname,
+            pesel: newTenant.pesel,
+            phoneNumber: newTenant.phoneNumber,
+            mail: newTenant.mail,
+            tenantsNumber: newTenant.tenantsNumber,
+            isBacklog: newTenant.isBacklog, // Ensure isBacklog is passed if required
+            flatId: selectedFlatId,  // Sending flatId as part of the request body
+        };
+
+        // Log the data being sent to the server
+        console.log("Sending tenant data:", JSON.stringify(tenantData));
 
         try {
             const response = await fetch("http://localhost:8080/api/admin/tenants", {
@@ -294,40 +346,31 @@ const ManageCooperativeContent = () => {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    ...newTenant,
-                    flatId: selectedFlatId, // Dodajemy flatId
-                }),
+                body: JSON.stringify(tenantData),
             });
 
             if (response.ok) {
-                // Jeśli dodano, zaktualizuj dane (np. wstaw mieszkańca do mieszkania)
-                setShowAddTenantModal(false);
+                console.log("Tenant added successfully");
+                setShowAddTenantModal(false);  // Close the modal after success
+
+                // Reset the state for the new tenant form
                 setNewTenant({
                     name: '',
                     surname: '',
                     pesel: '',
                     phoneNumber: '',
                     mail: '',
-                    isBacklog: false,
                     tenantsNumber: 1,
+                    isBacklog: false,
                 });
-                // Możesz odświeżyć listę mieszkań, aby odzwierciedlić dodanie nowego mieszkańca
             } else {
-                console.error("Błąd dodawania mieszkańca");
+                const errorMessage = await response.text();
+                console.error("Error adding tenant:", errorMessage);
             }
         } catch (error) {
-            console.error(error);
+            console.error("An error occurred while adding the tenant:", error);
         }
     };
-
-
-
-
-
-
-
-
 
 
     const [showAddFlatModal, setShowAddFlatModal] = useState(false);
@@ -560,29 +603,30 @@ const ManageCooperativeContent = () => {
 
                                                                                 {selectedFlat && selectedFlat.flatId === flat.flatId && (
                                                                                     <div className="ml-4 border-l-2 border-gray-200 pl-4">
-                                                                                        {/* Sprawdzamy, czy istnieją jacyś najemcy powiązani z tym mieszkaniem */}
-                                                                                        {tenants.length > 0 ? (
-                                                                                            <ul className="space-y-1 mt-2 ml-4">
-                                                                                                {tenants.map((tenant) => (
-                                                                                                    <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
-                                                                                                        {tenant.name} {tenant.surname} ({tenant.pesel})
-                                                                                                        (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
-                                                                                                        <button
-                                                                                                            onClick={() => handleDeleteTenant(tenant.tenantId)}
-                                                                                                            className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
-                                                                                                        >
-                                                                                                            Usuń mieszkańca
-                                                                                                        </button>
-                                                                                                    </li>
-                                                                                                ))}
-                                                                                            </ul>
-                                                                                        ) : (
-                                                                                            <div className="text-sm text-gray-700 dark:text-white font-bold">
-                                                                                                Brak przypisanego mieszkańca
-                                                                                            </div>
-                                                                                        )}
 
-                                                                                        {/* Przycisk do dodania mieszkańca - widoczny tylko, gdy brak mieszkańców */}
+{tenants.length > 0 ? (
+    <ul className="space-y-1 mt-2 ml-4">
+        {tenants.map((tenant) => (
+            <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
+                {tenant.name} {tenant.surname} ({tenant.pesel})
+                (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
+                <button
+                    onClick={() => handleDeleteTenant(tenant.tenantId)}
+                    className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
+                >
+                    Usuń mieszkańca
+                </button>
+            </li>
+        ))}
+    </ul>
+) : (
+    <div className="text-sm text-gray-700 dark:text-white font-bold">
+        Brak przypisanego mieszkańca
+    </div>
+)}
+
+
+                                                                                        {/* Button to add a tenant, visible only when there are no tenants */}
                                                                                         {tenants.length === 0 && (
                                                                                             <button
                                                                                                 onClick={() => handleAddTenantClick(flat.flatId)}
@@ -593,6 +637,7 @@ const ManageCooperativeContent = () => {
                                                                                         )}
                                                                                     </div>
                                                                                 )}
+
                                                                             </li>
                                                                         ))}
 
@@ -687,19 +732,25 @@ const ManageCooperativeContent = () => {
                                     placeholder="Email"
                                 />
                             </div>
-
                             <div className="mb-4">
-                                <label htmlFor="isBacklog" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Czy zaległy?
+                                <label htmlFor="tenantsNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Liczba mieszkańców:
                                 </label>
                                 <input
-                                    type="checkbox"
-                                    id="isBacklog"
-                                    checked={newTenant.isBacklog}
-                                    onChange={(e) => setNewTenant({ ...newTenant, isBacklog: e.target.checked })}
+                                    type="number"
+                                    id="tenantsNumber"
+                                    value={newTenant.tenantsNumber}
+                                    onChange={(e) => setNewTenant({
+                                        ...newTenant,
+                                        tenantsNumber: e.target.value ? parseInt(e.target.value) : 1
+                                    })}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600 text-neutral-700 dark:text-gray-300"
+                                    placeholder="Liczba mieszkańców"
                                 />
                             </div>
+
+
+
                         </div>
                         <div className="mt-6 flex justify-end space-x-4">
                             <button onClick={() => setShowAddTenantModal(false)} className="bg-neutral-500 dark:bg-neutral-700 text-white px-4 py-2 rounded-lg">Anuluj</button>
