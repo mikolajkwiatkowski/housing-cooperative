@@ -84,13 +84,18 @@ const ManageInhabitantsContent = () => {
 
     // Funkcja do zmiany wartości w formularzu edycji mieszkańca
     const handleEditResidentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (editingResident) {
-            setEditingResident({
-                ...editingResident,
-                [e.target.name]: e.target.value
-            });
-        }
+        const { name, value } = e.target;
+    
+        // Aktualizuj stan `editingResident`
+        setEditingResident((prev) => {
+            if (!prev) return null;
+            return {
+                ...prev,
+                [name]: name === "tenantsNumber" ? parseInt(value, 10) || 0 : value,
+            };
+        });
     };
+    
 
     // Funkcja do zapisywania nowego mieszkańca
     const handleSaveNewResident = async () => {
@@ -167,6 +172,16 @@ const ManageInhabitantsContent = () => {
     // Funkcja do zapisywania edytowanego mieszkańca
     const handleSaveEditedResident = async () => {
         if (!editingResident) return;
+    
+        const tenantData = {
+            pesel: editingResident.pesel,
+            name: editingResident.name,
+            surname: editingResident.surname,
+            phoneNumber: editingResident.phoneNumber,
+            mail: editingResident.mail,
+            tenantsNumber: editingResident.tenantsNumber,
+        };
+    
         try {
             const token = localStorage.getItem("token");
             const response = await fetch(`http://localhost:8080/api/admin/tenants/${editingResident.tenantId}`, {
@@ -175,25 +190,28 @@ const ManageInhabitantsContent = () => {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(editingResident),
+                body: JSON.stringify(tenantData),
             });
-
+    
             if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
+                const errorData = await response.json();
+                console.error("Błąd podczas edytowania mieszkańca:", errorData);
+                throw new Error(errorData.message || "Wystąpił problem podczas edytowania mieszkańca.");
             }
-
-            const updatedResident = await response.json();
-            setResidents((prev) =>
-                prev.map((resident) =>
-                    resident.tenantId === updatedResident.tenantId ? updatedResident : resident
-                )
-            );
-            setShowEditModal(false); // Zamknij modal
-            setEditingResident(null); // Resetuj stan edytowanego mieszkańca
+    
+            // Po edycji pobierz ponownie całą listę mieszkańców
+            await fetchResidents();
+    
+            setShowEditModal(false);
+            setEditingResident(null);
         } catch (err: any) {
-            setError(err.message || "Wystąpił błąd podczas zapisywania edytowanych danych.");
+            console.error("Błąd:", err.message || err);
+            alert("Wystąpił błąd podczas edytowania mieszkańca.");
         }
     };
+    
+    
+    
 
     const handleCheckboxChange = (id: number) => {
         setSelectedResidents((prev) =>
