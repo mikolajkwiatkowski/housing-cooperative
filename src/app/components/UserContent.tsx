@@ -21,7 +21,7 @@ const UserContent = (props: Props) => {
           <main className="flex-grow p-8 flex justify-center">
             <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 gap-y-2 mt-14">
               {/* Kafelek 1 */}
-              <Link href="/payments" className="text-blue-600 font-bold dark:text-emerald-500 block">
+              <Link href="user_panel/payments" className="text-blue-600 font-bold dark:text-emerald-500 block">
                 <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
                   <MdPayments className='w-56 h-56 pt-5'/>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 dark:text-white">Należności do Uregulowania</h3>
