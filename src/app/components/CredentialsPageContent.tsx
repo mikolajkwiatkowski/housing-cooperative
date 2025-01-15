@@ -6,6 +6,10 @@ const CredentialsPageContent: React.FC = () => {
     const [tenantsWithUser, setTenantsWithUser] = useState([]);
     const [selectedTenant, setSelectedTenant] = useState<{ email: string, tenantId: number } | null>(null);
     const [formData, setFormData] = useState({ firstName: "", email: "", password: "", tenantId: 0 });
+    const [passwordFormData, setPasswordFormData] = useState({ email: "", newPassword: "" });
+    const [isLoading, setIsLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         const fetchTenantsWithoutUser = async () => {
@@ -69,6 +73,10 @@ const CredentialsPageContent: React.FC = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPasswordFormData({ ...passwordFormData, [e.target.name]: e.target.value });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -94,6 +102,41 @@ const CredentialsPageContent: React.FC = () => {
             window.location.reload();
         } catch (error) {
             console.error("Błąd podczas rejestracji najemcy:", error);
+        }
+    };
+
+    const handleChangePassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        try {
+            setIsLoading(true);
+            const token = localStorage.getItem("token");
+            if (!token) {
+                throw new Error("Brak tokena w lokalnej pamięci");
+            }
+            const response = await fetch("http://localhost:8080/api/user/changePassword", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(passwordFormData)
+            });
+
+            if (response.ok) {
+                setSuccessMessage("Hasło zostało zmienione pomyślnie.");
+                setErrorMessage("");
+                setPasswordFormData({ email: "", newPassword: "" });
+            } else {
+                const errorData = await response.text();
+                setErrorMessage(`Błąd: ${errorData}`);
+                setSuccessMessage("");
+            }
+        } catch (error) {
+            setErrorMessage("Wystąpił błąd podczas zmiany hasła.");
+            setSuccessMessage("");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -203,15 +246,63 @@ const CredentialsPageContent: React.FC = () => {
                             <th className="py-2 px-4 border-b text-left">Imię</th>
                             <th className="py-2 px-4 border-b text-left">Nazwisko</th>
                             <th className="py-2 px-4 border-b text-left">Email</th>
+                            <th className="py-2 px-4 border-b text-left">Akcja</th>
                         </tr>
                         </thead>
                         <tbody>
                         {tenantsWithUser.map((tenant) => (
-                            <tr key={tenant.tenantId} className="hover:bg-gray-100 dark:hover:bg-neutral-700">
-                                <td className="py-2 px-4 border-b">{tenant.name}</td>
-                                <td className="py-2 px-4 border-b">{tenant.surname}</td>
-                                <td className="py-2 px-4 border-b">{tenant.mail}</td>
-                            </tr>
+                            <React.Fragment key={tenant.tenantId}>
+                                <tr className="hover:bg-gray-100 dark:hover:bg-neutral-700">
+                                    <td className="py-2 px-4 border-b">{tenant.name}</td>
+                                    <td className="py-2 px-4 border-b">{tenant.surname}</td>
+                                    <td className="py-2 px-4 border-b">{tenant.mail}</td>
+                                    <td className="py-2 px-4 border-b">
+                                        <button
+                                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                                            onClick={() => setPasswordFormData({ email: tenant.mail, newPassword: "" })}
+                                        >
+                                            Zmień Hasło
+                                        </button>
+                                    </td>
+                                </tr>
+                                {passwordFormData.email === tenant.mail && (
+                                    <tr>
+                                        <td colSpan={4} className="py-2 px-4 border-b">
+                                            <div className="mt-8">
+                                                <h3 className="text-2xl font-bold mb-4 text-center text-black dark:text-white">Zmień Hasło dla {tenant.mail}</h3>
+                                                <form onSubmit={handleChangePassword} className="space-y-6">
+                                                    <div>
+                                                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nowe Hasło</label>
+                                                        <input
+                                                            type="password"
+                                                            name="newPassword"
+                                                            id="newPassword"
+                                                            value={passwordFormData.newPassword}
+                                                            onChange={handlePasswordChange}
+                                                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="mt-6 flex justify-end gap-4">
+                                                        <button
+                                                            onClick={() => setPasswordFormData({ email: "", newPassword: "" })}
+                                                            className="bg-neutral-600 dark:bg-neutral-700 text-white px-4 py-2 rounded-lg"
+                                                        >
+                                                            Anuluj
+                                                        </button>
+                                                        <button
+                                                            type="submit"
+                                                            className="bg-blue-600 dark:bg-emerald-700 text-white px-4 py-2 rounded-lg"
+                                                        >
+                                                            Zmień Hasło
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
                         ))}
                         </tbody>
                     </table>
