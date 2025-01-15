@@ -220,7 +220,97 @@ const InvoicePageContent: React.FC = () => {
                         <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">Dodaj Fakturę</h2>
                         {/* Formularz */}
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Formularz pola... */}
+                            <div>
+                                <label htmlFor="tenantName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Imię</label>
+                                <input
+                                    type="text"
+                                    name="tenantName"
+                                    id="tenantName"
+                                    value={tenantName}
+                                    onChange={handleTenantChange}
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="tenantSurname" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Nazwisko</label>
+                                <input
+                                    type="text"
+                                    name="tenantSurname"
+                                    id="tenantSurname"
+                                    value={tenantSurname}
+                                    onChange={handleTenantChange}
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="invoiceNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Numer Faktury</label>
+                                <input
+                                    type="text"
+                                    name="invoiceNumber"
+                                    id="invoiceNumber"
+                                    value={formData.invoiceNumber}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="invoiceCategory" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategoria</label>
+                                <select
+                                    name="invoiceCategory"
+                                    id="invoiceCategory"
+                                    value={formData.invoiceCategory}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                >
+                                    {invoiceCategories.map((category) => (
+                                        <option key={category} value={category}>{category}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label htmlFor="issueDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Data Wystawienia</label>
+                                <input
+                                    type="date"
+                                    name="issueDate"
+                                    id="issueDate"
+                                    value={formData.issueDate}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="paymentDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Data Płatności</label>
+                                <input
+                                    type="date"
+                                    name="paymentDate"
+                                    id="paymentDate"
+                                    value={formData.paymentDate}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="sum" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Kwota</label>
+                                <input
+                                    type="number"
+                                    name="sum"
+                                    id="sum"
+                                    value={formData.sum}
+                                    onChange={handleChange}
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="isPaid" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Opłacone</label>
+                                <input
+                                    type="checkbox"
+                                    name="isPaid"
+                                    id="isPaid"
+                                    checked={formData.isPaid}
+                                    onChange={handleChange}
+                                    className="mt-1 block"
+                                />
+                            </div>
                             <div className="mt-6 flex justify-end gap-4">
                                 <button
                                     onClick={() => setIsFormVisible(false)}
