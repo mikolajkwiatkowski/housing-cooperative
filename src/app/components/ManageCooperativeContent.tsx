@@ -4,6 +4,13 @@ import BackButton from "./BackButton";
 import 'tailwindcss/tailwind.css';
 import useAuth from "@/app/useAuth";
 
+
+type Item = {
+    id: number;
+    name: string;
+    // Dodaj inne pola w zależności od potrzeb
+};
+
 type Block = {
     blockId: number;
     city: string;
@@ -46,6 +53,7 @@ const ManageCooperativeContent = () => {
     const [error, setError] = useState<string | null>(null);
     const [showEditModal, setShowEditModal] = useState<boolean>(false);
     const [editingItem, setEditingItem] = useState<Block | ApartmentStaircase | Flat | null>(null);
+    const [editingType, setEditingType] = useState<null | ItemType>(null);
     const [newBlock, setNewBlock] = useState<Block | null>(null);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
     const fetchBlocks = async () => {
@@ -187,16 +195,20 @@ const ManageCooperativeContent = () => {
                     surname: tenant.surname,
                     phoneNumber: tenant.phoneNumber,
                     mail: tenant.mail,
-                    flat: {
-                        flatId: tenant.flatId,
-                        flatNumber: tenant.flatNumber,
-                        surface: tenant.surface,
-                        apartmentStaircase: tenant.apartmentStaircase
-                    }
+                    flat: tenant.flat || {}
                 }))
-                : [];
+                : rawData ? [{
+                    tenantId: rawData.tenantId,
+                    pesel: rawData.pesel,
+                    name: rawData.name,
+                    surname: rawData.surname,
+                    phoneNumber: rawData.phoneNumber,
+                    mail: rawData.mail,
+                    flat: rawData.flat || {}
+                }] : [];
 
 
+            console.log("TenantData to be set:", tenantData);
             setTenants(tenantData);
         } catch (err: unknown) {
             if (err instanceof Error) {
@@ -516,8 +528,62 @@ const ManageCooperativeContent = () => {
         }
     };
 
+    const saveBlock = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch("http://localhost:8080/api/admin/blocks", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editingItem),
+            });
+            if (!response.ok) throw new Error("Błąd podczas zapisu bloku.");
+            alert("Blok zapisany pomyślnie!");
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    const saveFlat = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch("http://localhost:8080/api/admin/flats", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editingItem),
+            });
+            if (!response.ok) throw new Error("Błąd podczas zapisu mieszkania.");
+            alert("Mieszkanie zapisane pomyślnie!");
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
+    const saveStaircase = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch("http://localhost:8080/api/admin/apartment_staircases", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editingItem),
+            });
+            if (!response.ok) throw new Error("Błąd podczas zapisu klatki schodowej.");
+            alert("Klatka schodowa zapisana pomyślnie!");
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    type Item = Block | Flat | ApartmentStaircase;
+    type ItemType = 'block' | 'flat' | 'staircase';
 
 
     const handleEditClick = (item: Block | ApartmentStaircase | Flat) => {
@@ -589,8 +655,6 @@ const ManageCooperativeContent = () => {
         }
         setShowEditModal(false);
     };
-
-
     useAuth();
     return (
         <div className="container mx-auto mt-4 ">
@@ -612,7 +676,7 @@ const ManageCooperativeContent = () => {
                                     <li key={block.blockId} className="mb-2">
                                         <div className="flex items-center">
                                             <button onClick={() => handleBlockClick(block)} className="mr-2 text-blue-500 dark:text-cyan-500">▶</button>
-                                            <div className="font-bold text-lg text-blue-600 dark:text-cyan-500  cursor-pointer" onClick={() => handleEditClick(block)}>
+                                            <div className="font-bold text-lg text-blue-600 dark:text-cyan-500  cursor-pointer" onClick={() => handleEdit(block,"block")}>
                                                 {block.city}, {block.street} {block.buildingNumber}
                                             </div>
                                             <button
@@ -632,7 +696,7 @@ const ManageCooperativeContent = () => {
                                                         <li key={staircase.apartmentStaircaseId} className="mb-2">
                                                             <div className="flex items-center">
                                                                 <button onClick={() => handleStaircaseClick(staircase)} className="mr-2 text-green-600">▶</button>
-                                                                <div className="font-semibold text-md text-green-600 cursor-pointer" onClick={() => handleEditClick(staircase)}>
+                                                                    <div className="font-semibold text-md text-green-600 cursor-pointer" onClick={() => handleEdit(staircase, "staircase")}>
                                                                     Klatka {staircase.staircaseNumber} (Powierzchnia wspólna: {staircase.sharedSurface})
                                                                 </div>
                                                                 <button
@@ -652,7 +716,7 @@ const ManageCooperativeContent = () => {
                                                                             <li key={flat.flatId} className="mb-2">
                                                                                 <div className="flex items-center">
                                                                                     <button onClick={() => handleFlatClick(flat)} className="mr-2 text-neutral-700 dark:text-yellow-400">▶</button>
-                                                                                    <div className="text-sm text-gray-700 dark:text-yellow-400 cursor-pointer" onClick={() => handleEditClick(flat)}>
+                                                                                    <div className="text-sm text-gray-700 dark:text-yellow-400 cursor-pointer" onClick={() => handleEdit(flat,"flat")}>
                                                                                         Mieszkanie {flat.flatNumber} (Powierzchnia: {flat.surface})
                                                                                     </div>
                                                                                     <button
@@ -666,26 +730,26 @@ const ManageCooperativeContent = () => {
                                                                                 {selectedFlat && selectedFlat.flatId === flat.flatId && (
                                                                                     <div className="ml-4 border-l-2 border-gray-200 pl-4">
 
-{tenants.length > 0 ? (
-    <ul className="space-y-1 mt-2 ml-4">
-        {tenants.map((tenant) => (
-            <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
-                {tenant.name} {tenant.surname} ({tenant.pesel})
-                (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
-                <button
-                    onClick={() => handleDeleteTenant(tenant.tenantId)}
-                    className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
-                >
-                    Usuń mieszkańca
-                </button>
-            </li>
-        ))}
-    </ul>
-) : (
-    <div className="text-sm text-gray-700 dark:text-white font-bold">
-        Brak przypisanego mieszkańca
-    </div>
-)}
+                                                                                        {tenants.length > 0 ? (
+                                                                                            <ul className="space-y-1 mt-2 ml-4">
+                                                                                                {tenants.map((tenant) => (
+                                                                                                    <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
+                                                                                                        {tenant.name} {tenant.surname} ({tenant.pesel})
+                                                                                                        (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
+                                                                                                        <button
+                                                                                                            onClick={() => handleDeleteTenant(tenant.tenantId)}
+                                                                                                            className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                                                        >
+                                                                                                            Usuń mieszkańca
+                                                                                                        </button>
+                                                                                                    </li>
+                                                                                                ))}
+                                                                                            </ul>
+                                                                                        ) : (
+                                                                                            <div className="text-sm text-gray-700 dark:text-white font-bold">
+                                                                                                Brak przypisanego mieszkańca
+                                                                                            </div>
+                                                                                        )}
 
 
                                                                                         {/* Button to add a tenant, visible only when there are no tenants */}

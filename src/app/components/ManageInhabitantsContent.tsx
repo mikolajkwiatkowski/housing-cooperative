@@ -234,13 +234,7 @@ const ManageInhabitantsContent = () => {
             <main className="flex-grow flex flex-col p-8">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Zarządzanie mieszkańcami</h1>
 
-                {/* Przycisk do dodawania mieszkańca */}
-                <button
-                    onClick={() => setShowAddModal(true)}
-                    className="bg-green-600 text-white px-4 py-2 rounded-lg mb-4"
-                >
-                    Dodaj mieszkańca
-                </button>
+                
 
                 {/* Wyszukiwanie */}
                 <div>
