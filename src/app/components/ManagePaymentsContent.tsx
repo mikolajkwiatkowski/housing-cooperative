@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import useAuth from "@/app/useAuth";
+import BackButton from "@/app/components/BackButton";
 
-const MenagePaymentsContent = () => {
+const ManagePaymentsContent = () => {
     const [backlogTenants, setBacklogTenants] = useState<any[]>([]);
     const [nonBacklogTenants, setNonBacklogTenants] = useState<any[]>([]);
     const [formError, setFormError] = useState<string | null>(null);
@@ -107,7 +108,9 @@ const MenagePaymentsContent = () => {
     useAuth();
     return (
         <div className="flex flex-col bg-gray-100 dark:bg-neutral-800 min-h-screen p-8">
-            <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
+            <BackButton />
+            <main className="flex-grow flex flex-col p-8">
+                <h1 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
                 Zarządzanie Płatnościami
             </h1>
             {formError && <p className="text-red-500 mb-4">{formError}</p>}
@@ -201,8 +204,9 @@ const MenagePaymentsContent = () => {
                     </table>
                 </div>
             </section>
+            </main>
         </div>
     );
 };
 
-export default MenagePaymentsContent;
+export default ManagePaymentsContent;

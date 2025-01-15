@@ -1,19 +1,21 @@
+"use client"
 import React from "react";
 import AdminNavbar from "@/app/components/AdminNavbar";
 import AdminFooter from "@/app/components/AdminFooter";
-import MenagePaymentsContent from "@/app/components/MenagePaymentsContent";
+import ManagePaymentsContent from "@/app/components/ManagePaymentsContent";
+import withProtectedPage from "@/app/components/withProtectedPage";
 
-const MenagePayments: React.FC = () => {
+const ManagePayments: React.FC = () => {
 
     return (
         <div className="flex flex-col bg-gray-900">
             <main className="flex-grow">
                 <AdminNavbar/>
-                <MenagePaymentsContent/>
+                <ManagePaymentsContent/>
                 <AdminFooter/>
             </main>
         </div>
     );
 };
 
-export default MenagePayments;
+export default withProtectedPage(ManagePayments);

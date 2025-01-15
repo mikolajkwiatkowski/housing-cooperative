@@ -3,7 +3,7 @@ import React from 'react';
 import Link from "next/link";
 import AdminFooter from './AdminFooter';
 import AdminNavbar from './AdminNavbar';
-import { FaUser } from "react-icons/fa";
+import {FaKey, FaUser} from "react-icons/fa";
 import { MdError } from "react-icons/md";
 import { IoWater } from "react-icons/io5";
 import { FaFileInvoiceDollar } from "react-icons/fa6";
@@ -60,6 +60,13 @@ const AdminContent = (props: Props) => {
                 <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
                   <FaCity className='w-60 h-60'/>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 dark:text-white">Zarządzanie zasobami spółdzielni</h3>
+                </div>
+              </Link>
+              {/* Kafelek 7 - Zmiana danych logowania */}
+              <Link href="/admin_panel/change_credentials" className="text-blue-600 font-bold dark:text-emerald-500 block">
+                <div className="bg-white hover:bg-stone-200 p-6 rounded-lg shadow-xl dark:bg-neutral-900 dark:hover:bg-neutral-700 flex flex-col items-center justify-between h-[24rem] w-[24rem]">
+                  <FaKey className='w-56 h-56 pt-5'/>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4 dark:text-white">Zmiana danych logowania</h3>
                 </div>
               </Link>
             </div>
