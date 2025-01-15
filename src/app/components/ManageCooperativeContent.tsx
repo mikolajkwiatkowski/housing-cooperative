@@ -195,20 +195,16 @@ const ManageCooperativeContent = () => {
                     surname: tenant.surname,
                     phoneNumber: tenant.phoneNumber,
                     mail: tenant.mail,
-                    flat: tenant.flat || {}
+                    flat: {
+                        flatId: tenant.flatId,
+                        flatNumber: tenant.flatNumber,
+                        surface: tenant.surface,
+                        apartmentStaircase: tenant.apartmentStaircase
+                    }
                 }))
-                : rawData ? [{
-                    tenantId: rawData.tenantId,
-                    pesel: rawData.pesel,
-                    name: rawData.name,
-                    surname: rawData.surname,
-                    phoneNumber: rawData.phoneNumber,
-                    mail: rawData.mail,
-                    flat: rawData.flat || {}
-                }] : [];
+                : [];
 
 
-            console.log("TenantData to be set:", tenantData);
             setTenants(tenantData);
         } catch (err: unknown) {
             if (err instanceof Error) {
@@ -528,62 +524,8 @@ const ManageCooperativeContent = () => {
         }
     };
 
-    const saveBlock = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch("http://localhost:8080/api/admin/blocks", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(editingItem),
-            });
-            if (!response.ok) throw new Error("Błąd podczas zapisu bloku.");
-            alert("Blok zapisany pomyślnie!");
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
-    const saveFlat = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch("http://localhost:8080/api/admin/flats", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(editingItem),
-            });
-            if (!response.ok) throw new Error("Błąd podczas zapisu mieszkania.");
-            alert("Mieszkanie zapisane pomyślnie!");
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
-    const saveStaircase = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            const response = await fetch("http://localhost:8080/api/admin/apartment_staircases", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(editingItem),
-            });
-            if (!response.ok) throw new Error("Błąd podczas zapisu klatki schodowej.");
-            alert("Klatka schodowa zapisana pomyślnie!");
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    type Item = Block | Flat | ApartmentStaircase;
-    type ItemType = 'block' | 'flat' | 'staircase';
 
 
     const handleEditClick = (item: Block | ApartmentStaircase | Flat) => {
@@ -619,7 +561,7 @@ const ManageCooperativeContent = () => {
                 data = {
                     apartmentStaircaseId: editingItem.apartmentStaircaseId,
                     sharedSurface: editingItem.sharedSurface,
-                    address: editingItem.staircaseNumber,
+                    staircaseNumber: editingItem.staircaseNumber,
                     block : editingItem.block
                 };
 
@@ -650,6 +592,11 @@ const ManageCooperativeContent = () => {
                 },
                 body: JSON.stringify(data),
             });
+            if (!response.ok) {
+                throw new Error("Failed to update item");
+            }
+
+            console.log("Item updated successfully");
         } catch (err:any){
             console.error("Błąd", err.message || err)
         }
@@ -676,7 +623,7 @@ const ManageCooperativeContent = () => {
                                     <li key={block.blockId} className="mb-2">
                                         <div className="flex items-center">
                                             <button onClick={() => handleBlockClick(block)} className="mr-2 text-blue-500 dark:text-cyan-500">▶</button>
-                                            <div className="font-bold text-lg text-blue-600 dark:text-cyan-500  cursor-pointer" onClick={() => handleEdit(block,"block")}>
+                                            <div className="font-bold text-lg text-blue-600 dark:text-cyan-500  cursor-pointer" onClick={() => handleEditClick(block)}>
                                                 {block.city}, {block.street} {block.buildingNumber}
                                             </div>
                                             <button
@@ -696,7 +643,7 @@ const ManageCooperativeContent = () => {
                                                         <li key={staircase.apartmentStaircaseId} className="mb-2">
                                                             <div className="flex items-center">
                                                                 <button onClick={() => handleStaircaseClick(staircase)} className="mr-2 text-green-600">▶</button>
-                                                                    <div className="font-semibold text-md text-green-600 cursor-pointer" onClick={() => handleEdit(staircase, "staircase")}>
+                                                                <div className="font-semibold text-md text-green-600 cursor-pointer" onClick={() => handleEditClick(staircase)}>
                                                                     Klatka {staircase.staircaseNumber} (Powierzchnia wspólna: {staircase.sharedSurface})
                                                                 </div>
                                                                 <button
@@ -716,7 +663,7 @@ const ManageCooperativeContent = () => {
                                                                             <li key={flat.flatId} className="mb-2">
                                                                                 <div className="flex items-center">
                                                                                     <button onClick={() => handleFlatClick(flat)} className="mr-2 text-neutral-700 dark:text-yellow-400">▶</button>
-                                                                                    <div className="text-sm text-gray-700 dark:text-yellow-400 cursor-pointer" onClick={() => handleEdit(flat,"flat")}>
+                                                                                    <div className="text-sm text-gray-700 dark:text-yellow-400 cursor-pointer" onClick={() => handleEditClick(flat)}>
                                                                                         Mieszkanie {flat.flatNumber} (Powierzchnia: {flat.surface})
                                                                                     </div>
                                                                                     <button
@@ -730,26 +677,26 @@ const ManageCooperativeContent = () => {
                                                                                 {selectedFlat && selectedFlat.flatId === flat.flatId && (
                                                                                     <div className="ml-4 border-l-2 border-gray-200 pl-4">
 
-                                                                                        {tenants.length > 0 ? (
-                                                                                            <ul className="space-y-1 mt-2 ml-4">
-                                                                                                {tenants.map((tenant) => (
-                                                                                                    <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
-                                                                                                        {tenant.name} {tenant.surname} ({tenant.pesel})
-                                                                                                        (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
-                                                                                                        <button
-                                                                                                            onClick={() => handleDeleteTenant(tenant.tenantId)}
-                                                                                                            className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
-                                                                                                        >
-                                                                                                            Usuń mieszkańca
-                                                                                                        </button>
-                                                                                                    </li>
-                                                                                                ))}
-                                                                                            </ul>
-                                                                                        ) : (
-                                                                                            <div className="text-sm text-gray-700 dark:text-white font-bold">
-                                                                                                Brak przypisanego mieszkańca
-                                                                                            </div>
-                                                                                        )}
+{tenants.length > 0 ? (
+    <ul className="space-y-1 mt-2 ml-4">
+        {tenants.map((tenant) => (
+            <li key={tenant.tenantId} className="text-sm text-gray-700 dark:text-white font-bold">
+                {tenant.name} {tenant.surname} ({tenant.pesel})
+                (Tel: {tenant.phoneNumber}, Email: {tenant.mail})
+                <button
+                    onClick={() => handleDeleteTenant(tenant.tenantId)}
+                    className="ml-4 bg-red-500 text-white px-2 py-1 rounded-lg"
+                >
+                    Usuń mieszkańca
+                </button>
+            </li>
+        ))}
+    </ul>
+) : (
+    <div className="text-sm text-gray-700 dark:text-white font-bold">
+        Brak przypisanego mieszkańca
+    </div>
+)}
 
 
                                                                                         {/* Button to add a tenant, visible only when there are no tenants */}
