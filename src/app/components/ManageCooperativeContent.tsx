@@ -525,10 +525,72 @@ const ManageCooperativeContent = () => {
         setShowEditModal(true);
     };
 
-    const handleSaveEdit = () => {
-        // Save the edited item
+    const handleSaveEdit = async () => {
+        if(!editingItem) return;
+        try {
+            let endpoint_id = null;
+            let endpoint_dir = null;
+            let data = {};
+            const token = localStorage.getItem("token");
+            if ("blockId" in editingItem) {
+                endpoint_id = editingItem.blockId;
+                endpoint_dir = "blocks"
+
+
+                data = {
+                    blockId: editingItem.blockId,
+                    city: editingItem.city,
+                    street: editingItem.street,
+                    buildingNumber : editingItem.buildingNumber
+                };
+
+                // Typ obiektu to Block
+                console.log("Editing Block:", editingItem);
+            } else if ("apartmentStaircaseId" in editingItem) {
+                endpoint_id = editingItem.apartmentStaircaseId;
+                endpoint_dir = "apartment_staircases"
+
+                data = {
+                    apartmentStaircaseId: editingItem.apartmentStaircaseId,
+                    sharedSurface: editingItem.sharedSurface,
+                    address: editingItem.staircaseNumber,
+                    block : editingItem.block
+                };
+
+                // Typ obiektu to ApartmentStaircase
+                console.log("Editing ApartmentStaircase:", editingItem);
+            } else if ("flatId" in editingItem) {
+                endpoint_id = editingItem.flatId;
+                endpoint_dir = "flats"
+
+                data = {
+                    flatId : editingItem.flatId,
+                    flatNumber : editingItem.flatNumber ,
+                    surface: editingItem.surface,
+                    aparmentStaircase : editingItem.apartmentStaircase
+                };
+                // Typ obiektu to Flat
+                console.log("Editing Flat:", editingItem);
+
+            } else {
+                console.error("Unknown type for editingItem", editingItem);
+            }
+
+            const response = await fetch(`http://localhost:8080/api/admin/${endpoint_dir}/${endpoint_id}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+        } catch (err:any){
+            console.error("Błąd", err.message || err)
+        }
         setShowEditModal(false);
     };
+
+
     useAuth();
     return (
         <div className="container mx-auto mt-4 ">
