@@ -98,17 +98,17 @@ const ManageAccountContent: React.FC = () => {
           onSubmit={handleSubmit}
           className="bg-white dark:bg-neutral-900 p-4 rounded-lg shadow-md w-full max-w-xs max-h-[300px]"
         >
-          <h2 className="text-lg font-semibold mb-3 text-center">Zmiana hasła</h2>
+          <h2 className="text-lg font-semibold mb-3 text-center text-black dark:text-white">Zmiana hasła</h2>
 
           {errorMessage && (
-            <div className="text-red-500 mb-2 text-sm">{errorMessage}</div>
+            <div className="text-red-500 mb-2 text-sm ">{errorMessage}</div>
           )}
           {successMessage && (
             <div className="text-green-500 mb-2 text-sm">{successMessage}</div>
           )}
 
           <div className="mb-2">
-            <label htmlFor="newPassword" className="block font-medium mb-1">
+            <label htmlFor="newPassword" className="block font-medium mb-1 text-black dark:text-white">
               Nowe hasło
             </label>
             <input
@@ -116,13 +116,13 @@ const ManageAccountContent: React.FC = () => {
               id="newPassword"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full p-1.5 border rounded-lg dark:bg-neutral-800 dark:text-white text-sm"
+              className="w-full p-1.5 border rounded-lg dark:bg-neutral-800 text-black dark:text-white text-sm"
               required
             />
           </div>
 
           <div className="mb-2">
-            <label htmlFor="confirmPassword" className="block font-medium mb-1">
+            <label htmlFor="confirmPassword" className="block font-medium mb-1 text-black dark:text-white">
               Potwierdź nowe hasło
             </label>
             <input
@@ -130,7 +130,7 @@ const ManageAccountContent: React.FC = () => {
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-1.5 border rounded-lg dark:bg-neutral-800 dark:text-white text-sm"
+              className="w-full p-1.5 border rounded-lg dark:bg-neutral-800 dark:text-white text-black text-sm"
               required
             />
           </div>

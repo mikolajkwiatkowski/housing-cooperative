@@ -347,7 +347,7 @@ const CheckAlertsContent = () => {
                         {/* Modal edycji */}
                         {isEditing && selectedAlert && (
                             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                                <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg">
+                                <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg w-[600px] h-auto max-w-full">
                                     <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">
                                         Edytuj alert
                                     </h2>
@@ -368,7 +368,7 @@ const CheckAlertsContent = () => {
                                                 name="description"
                                                 value={selectedAlert.description}
                                                 onChange={handleInputChange}
-                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
+                                                className="w-full px-4 py-2 border h-56 border-gray-300 rounded-lg focus:outline focus:outline-2 focus:outline-blue-500 dark:focus:outline-emerald-600 focus:border-transparent dark:bg-neutral-600"
                                             />
                                         </label>
                                         <label className="text-black dark:text-white">

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import BackButton from "./BackButton";
 
 const CredentialsPageContent: React.FC = () => {
     const [tenantsWithoutUser, setTenantsWithoutUser] = useState([]);
@@ -141,7 +142,8 @@ const CredentialsPageContent: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-lg">
+        <div className="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-lg min-h-screen">
+            <BackButton/>
             <div className="flex flex-row justify-between">
                 <div className="w-1/2 pr-4">
                     <h2 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">Najemcy Bez Kont Użytkowników</h2>

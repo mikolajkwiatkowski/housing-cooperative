@@ -59,7 +59,7 @@ const Page: React.FC = () => {
       }
     } catch (error) {
       // @ts-ignore
-      setError(`An error occurred during login: ${error.message}`);
+      setError(`Błędne dane!`);
       setSuccessMessage(null); // Clear any previous success message
     }
   };

@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import BackButton from "./BackButton";
 
 const InvoicePageContent: React.FC = () => {
-    const invoiceCategories = ["WATER", "SHARED_ELECTRICITY", "RENT"];
+    const invoiceCategories = ["WODA", "WSPÓLNY_PRĄD", "WYNAJEM"];
     const [invoices, setInvoices] = useState([]);
     const [formData, setFormData] = useState({
         invoiceId: 16, // Ustawiona na sztywno wartość
@@ -161,8 +162,8 @@ const InvoicePageContent: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-lg">
-            {/* Tytuł */}
+        <div className="flex flex-col min-h-screen  bg-white dark:bg-neutral-800 p-8 rounded-lg shadow-lg">            {/* Tytuł */}
+            <BackButton/>
             <h2 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">Lista Faktur</h2>
 
             {/* Przycisk */}
@@ -228,7 +229,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="tenantName"
                                     value={tenantName}
                                     onChange={handleTenantChange}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
                                 />
                             </div>
                             <div>
@@ -239,7 +240,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="tenantSurname"
                                     value={tenantSurname}
                                     onChange={handleTenantChange}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
                                 />
                             </div>
                             <div>
@@ -250,7 +251,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="invoiceNumber"
                                     value={formData.invoiceNumber}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
                                 />
                             </div>
                             <div>
@@ -260,7 +261,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="invoiceCategory"
                                     value={formData.invoiceCategory}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm  text-black focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
                                 >
                                     {invoiceCategories.map((category) => (
                                         <option key={category} value={category}>{category}</option>
@@ -275,7 +276,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="issueDate"
                                     value={formData.issueDate}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
                                 />
                             </div>
                             <div>
@@ -286,7 +287,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="paymentDate"
                                     value={formData.paymentDate}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                    className="mt-1 block w-full border-gray-300  rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
                                 />
                             </div>
                             <div>
@@ -297,7 +298,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="sum"
                                     value={formData.sum}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white"
                                 />
                             </div>
                             <div>
@@ -308,7 +309,7 @@ const InvoicePageContent: React.FC = () => {
                                     id="isPaid"
                                     checked={formData.isPaid}
                                     onChange={handleChange}
-                                    className="mt-1 block"
+                                    className="mt-1 block text-black"
                                 />
                             </div>
                             <div className="mt-6 flex justify-end gap-4">

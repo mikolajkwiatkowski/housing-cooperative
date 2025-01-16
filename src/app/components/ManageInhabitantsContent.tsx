@@ -540,7 +540,7 @@ const ManageInhabitantsContent = () => {
                                 </button>
                                 <button
                                     onClick={() => handleDeleteResident(editingResident.tenantId)}
-                                    className="bg-red-600 dark:bg-emerald-600 text-white px-4 py-2 rounded-lg"
+                                    className="bg-red-600 dark:bg-red-500 text-white px-4 py-2 rounded-lg"
                                 >
                                     Usuń
                                 </button>

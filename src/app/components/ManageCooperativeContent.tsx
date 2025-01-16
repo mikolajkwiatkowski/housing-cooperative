@@ -606,7 +606,7 @@ const ManageCooperativeContent = () => {
     };
     useAuth();
     return (
-        <div className="container mx-auto mt-4 ">
+        <div className="container mx-auto min-h-screen flex flex-col mt-4 ">
             <BackButton />
             <main className="mt-4">
                 {error && <p className="text-center text-red-500">{error}</p>}

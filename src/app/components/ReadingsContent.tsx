@@ -310,8 +310,8 @@ const CheckWaterLogsContent = () => {
                                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4 text-center">
                                     Deklaracja zużycia
                                 </h2>
-                                <form onSubmit={handleSubmit} className="bg-white dark:bg-neutral-700 p-6 rounded-lg shadow-lg">
-                                    <div className="mb-4">
+                                <form onSubmit={handleSubmit} className="bg-white dark:bg-neutral-500 p-6 rounded-lg shadow-lg">
+                                    <div className="mb-4 ">
                                         <label className="block text-black dark:text-white mb-2" htmlFor="consumption">
                                             Zużycie (m³):
                                         </label>
