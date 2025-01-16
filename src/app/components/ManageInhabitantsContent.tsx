@@ -263,7 +263,6 @@ const ManageInhabitantsContent = () => {
                             <table className="w-full dark:text-white bg-white text-neutral-800 dark:bg-neutral-700 rounded-lg shadow-lg border-collapse">
                                 <thead>
                                     <tr>
-                                        <th className="text-center px-4 py-2 border-b-2">Zaznacz</th>
                                         <th className="text-center px-4 py-2 border-b-2">PESEL</th>
                                         <th className="text-center px-4 py-2 border-b-2">Imię</th>
                                         <th className="text-center px-4 py-2 border-b-2">Nazwisko</th>
@@ -284,16 +283,7 @@ const ManageInhabitantsContent = () => {
                                             key={resident.tenantId}
                                             className="border-b cursor-pointer"
                                         >
-                                            <td className="text-center px-4 py-2">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedResidents.includes(resident.tenantId)}
-                                                    onChange={(e) => {
-                                                        e.stopPropagation(); // Zapobiegaj propagacji kliknięcia
-                                                        handleCheckboxChange(resident.tenantId);
-                                                    }}
-                                                />
-                                            </td>
+                                            
                                             <td className="text-center px-4 py-2">{resident.pesel}</td>
                                             <td className="text-center px-4 py-2">{resident.name}</td>
                                             <td className="text-center px-4 py-2">{resident.surname}</td>
