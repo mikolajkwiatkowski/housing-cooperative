@@ -53,7 +53,6 @@ const ManageCooperativeContent = () => {
     const [error, setError] = useState<string | null>(null);
     const [showEditModal, setShowEditModal] = useState<boolean>(false);
     const [editingItem, setEditingItem] = useState<Block | ApartmentStaircase | Flat | null>(null);
-    const [editingType, setEditingType] = useState<null | ItemType>(null);
     const [newBlock, setNewBlock] = useState<Block | null>(null);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
     const fetchBlocks = async () => {
@@ -188,21 +187,24 @@ const ManageCooperativeContent = () => {
 
             // Zakładając, że rawData to tablica lub obiekt, możesz sprawdzić jego zawartość
             const tenantData = Array.isArray(rawData)
-                ? rawData.map((tenant: any) => ({
-                    tenantId: tenant.tenantId,
-                    pesel: tenant.pesel,
-                    name: tenant.name,
-                    surname: tenant.surname,
-                    phoneNumber: tenant.phoneNumber,
-                    mail: tenant.mail,
-                    flat: {
-                        flatId: tenant.flatId,
-                        flatNumber: tenant.flatNumber,
-                        surface: tenant.surface,
-                        apartmentStaircase: tenant.apartmentStaircase
-                    }
-                }))
-                : [];
+            ? rawData.map((tenant: any) => ({
+                tenantId: tenant.tenantId,
+                pesel: tenant.pesel,
+                name: tenant.name,
+                surname: tenant.surname,
+                phoneNumber: tenant.phoneNumber,
+                mail: tenant.mail,
+                flat: tenant.flat || {}
+            }))
+            : rawData ? [{
+                tenantId: rawData.tenantId,
+                pesel: rawData.pesel,
+                name: rawData.name,
+                surname: rawData.surname,
+                phoneNumber: rawData.phoneNumber,
+                mail: rawData.mail,
+                flat: rawData.flat || {}
+            }] : [];
 
 
             setTenants(tenantData);
@@ -628,7 +630,7 @@ const ManageCooperativeContent = () => {
                                             </div>
                                             <button
                                                 onClick={() => handleDeleteBlock(block.blockId)}
-                                                className="bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                className="bg-red-500 text-white px-2 py-1 ml-3 rounded-lg"
                                             >
                                                 Usuń blok
                                             </button>
@@ -648,7 +650,7 @@ const ManageCooperativeContent = () => {
                                                                 </div>
                                                                 <button
                                                                     onClick={() => handleDeleteStaircase(staircase.apartmentStaircaseId)}
-                                                                    className="bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                    className="bg-red-500 text-white px-2 py-1 ml-3 rounded-lg"
                                                                 >
                                                                     Usuń klatkę
                                                                 </button>
@@ -668,7 +670,7 @@ const ManageCooperativeContent = () => {
                                                                                     </div>
                                                                                     <button
                                                                                         onClick={() => handleDeleteFlat(flat.flatId)}
-                                                                                        className="bg-red-500 text-white px-2 py-1 rounded-lg"
+                                                                                        className="bg-red-500 text-white px-2 py-1 rounded-lg ml-3"
                                                                                     >
                                                                                         Usuń mieszkanie
                                                                                     </button>
