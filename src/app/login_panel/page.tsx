@@ -29,7 +29,6 @@ const Page: React.FC = () => {
         setSuccessMessage("Login successful!"); // Set success message
         setError(null); // Clear any previous errors
 
-        console.log(data.token);
 
         // Fetch the user role using the new endpoint
         const roleResponse = await fetch("http://localhost:8080/api/user/role", {
